@@ -7,12 +7,16 @@ import 'package:provider/provider.dart';
 import 'package:notification_flutter_app/core/locator.dart';
 import 'package:notification_flutter_app/presentation/providers/employee_provider.dart';
 import 'package:notification_flutter_app/presentation/providers/global_store.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(UserLoginInfoAdapter());
   await Hive.openBox<UserLoginInfo>('mobile_users');
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await requestNotificationPermissions();
 
   DependencyInjection().setupLocator();
   locator<GlobalStroe>().init();
@@ -43,5 +47,17 @@ class _HomePage extends StatelessWidget {
         routerConfig: routerConfig,
       ),
     );
+  }
+}
+
+Future<void> requestNotificationPermissions() async {
+  final PermissionStatus status = await Permission.notification.request();
+  if (status.isGranted) {
+    // Notification permissions granted
+  } else if (status.isDenied) {
+    // Notification permissions denied
+  } else if (status.isPermanentlyDenied) {
+    // Notification permissions permanently denied, open app settings
+    await openAppSettings();
   }
 }
