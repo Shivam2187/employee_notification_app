@@ -208,7 +208,7 @@ class _HomeDraggableScrollableSheetState
                                                   ? 'Overdue'
                                                   : remaningDays == 1
                                                       ? 'Due Today'
-                                                      : '${getRemainingDays(currentTask)} days left',
+                                                      : '$remaningDays days left',
                                               style: TextStyle(
                                                 color: remaningDays <= 1
                                                     ? Colors.red
@@ -256,10 +256,11 @@ class _HomeDraggableScrollableSheetState
   }
 
   int getRemainingDays(Task currentTask) {
-    final remaingDays = DateTime.parse(currentTask.taskComplitionDate)
-            .difference(DateTime.now())
-            .inDays +
-        1;
+    final now = DateTime.now();
+    final dateOnly = DateTime(now.year, now.month, now.day);
+    final taskDate = DateTime.parse(currentTask.taskComplitionDate);
+
+    final remaingDays = taskDate.difference(dateOnly).inDays + 1;
 
     return remaingDays;
   }

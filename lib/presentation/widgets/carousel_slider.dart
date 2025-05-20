@@ -29,6 +29,10 @@ class _AutoCarouselSliderState extends State<AutoCarouselSlider> {
                 imageUrl: url,
                 fit: BoxFit.cover,
                 width: double.infinity,
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+                placeholder: (context, url) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
             );
           }).toList(),

@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 class CustomSearchBar extends StatefulWidget {
   final Function(String) onChanged;
   final String initialText;
+  final String hinText;
 
-  const CustomSearchBar(
-      {super.key, required this.onChanged, required this.initialText});
+  const CustomSearchBar({
+    super.key,
+    required this.onChanged,
+    required this.initialText,
+    required this.hinText,
+  });
 
   @override
   State<CustomSearchBar> createState() => _CustomSearchBarState();
@@ -66,16 +71,16 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             color: Colors.black87,
             fontWeight: FontWeight.w500,
           ),
-          decoration: const InputDecoration(
-            prefixIcon: Icon(
+          decoration: InputDecoration(
+            prefixIcon: const Icon(
               Icons.search,
               color: Colors.grey,
               size: 28,
             ),
-            hintText: 'Search by Employee Name',
-            hintStyle: TextStyle(color: Colors.grey),
+            hintText: widget.hinText,
+            hintStyle: const TextStyle(color: Colors.grey),
             contentPadding:
-                EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
             border: InputBorder.none,
           ),
           onChanged: widget.onChanged,

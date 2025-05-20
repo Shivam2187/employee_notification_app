@@ -33,6 +33,7 @@ class AdminTaskDashboard extends StatelessWidget {
           body: Column(
             children: [
               CustomSearchBar(
+                hinText: 'Search Task by Employee Name',
                 onChanged: (value) {
                   data.setTaskSearchQuery(value);
                 },
@@ -85,12 +86,16 @@ class AdminTaskDashboard extends StatelessWidget {
                               Shimmer.fromColors(
                                 baseColor: remaningDays <= 0
                                     ? Colors.red
-                                    : Colors.grey.shade600,
+                                    : remaningDays == 1
+                                        ? Colors.blue
+                                        : Colors.grey.shade600,
                                 highlightColor: Colors.white,
                                 child: Text(
-                                  remaningDays == 0
-                                      ? 'Due Today'
-                                      : '${getRemainingDays(currentTask)} days left',
+                                  remaningDays <= 0
+                                      ? 'Overdue'
+                                      : remaningDays == 1
+                                          ? 'Due Today'
+                                          : '$remaningDays days left',
                                   style: TextStyle(
                                     color: remaningDays <= 0
                                         ? Colors.red
@@ -166,15 +171,11 @@ class AdminTaskDashboard extends StatelessWidget {
   }
 
   int getRemainingDays(Task currentTask) {
-    final remaingDays = DateTime.parse(currentTask.taskComplitionDate)
-        .difference(DateTime.now())
-        .inDays;
+    final now = DateTime.now();
+    final dateOnly = DateTime(now.year, now.month, now.day);
+    final taskDate = DateTime.parse(currentTask.taskComplitionDate);
 
-    if (remaingDays < 0) {
-      return 0; // Task is overdue
-    } else if (remaingDays == 0) {
-      return 1; // Task is due today
-    }
+    final remaingDays = taskDate.difference(dateOnly).inDays + 1;
 
     return remaingDays;
   }

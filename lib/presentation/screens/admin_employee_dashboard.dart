@@ -44,6 +44,7 @@ class _AdminEmployeeDashboardState extends State<AdminEmployeeDashboard> {
               : Column(
                   children: [
                     CustomSearchBar(
+                      hinText: 'Find employee by name',
                       onChanged: (value) {
                         data.setEmployeeSearchQuery(value);
                       },
