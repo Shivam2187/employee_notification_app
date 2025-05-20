@@ -27,7 +27,6 @@ final routerConfig = GoRouter(
           imageUrl: data.imageUrl,
           task: data.task,
           isCompleyedButtonVisible: data.isCompletedButtonVisible,
-          onPressed: data.onPressed,
         );
       },
     ),

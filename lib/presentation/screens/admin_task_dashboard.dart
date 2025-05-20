@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
@@ -129,10 +131,6 @@ class AdminTaskDashboard extends StatelessWidget {
                                 task: currentTask,
                                 imageUrl: imageUrl,
                                 isCompletedButtonVisible: true,
-                                onPressed: () async {
-                                  return await data.updateTaskStatus(
-                                      taskId: currentTask.id ?? '');
-                                },
                               ),
                             );
                           },
@@ -186,12 +184,34 @@ class TaskDetailsWithImageUrl {
   final Task task;
   final String imageUrl;
   final bool isCompletedButtonVisible;
-  final Future<bool> Function()? onPressed;
 
   TaskDetailsWithImageUrl({
     this.isCompletedButtonVisible = false,
-    this.onPressed,
     required this.task,
     required this.imageUrl,
   });
+
+  // Convert object to JSON Map
+  Map<String, dynamic> toJson() => {
+        'task': task.toJson(),
+        'imageUrl': imageUrl,
+        'isCompletedButtonVisible': isCompletedButtonVisible,
+      };
+
+  // Convert object to String
+  @override
+  String toString() => jsonEncode(toJson());
+
+  // Create object from JSON Map
+  factory TaskDetailsWithImageUrl.fromJson(Map<String, dynamic> json) {
+    return TaskDetailsWithImageUrl(
+      task: Task.fromJson(json['task']),
+      imageUrl: json['imageUrl'],
+      isCompletedButtonVisible: json['isCompletedButtonVisible'] ?? false,
+    );
+  }
+
+  // Create object from String
+  factory TaskDetailsWithImageUrl.fromString(String str) =>
+      TaskDetailsWithImageUrl.fromJson(jsonDecode(str));
 }

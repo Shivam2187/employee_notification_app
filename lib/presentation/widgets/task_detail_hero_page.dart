@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notification_flutter_app/data/models/task.dart';
+import 'package:notification_flutter_app/presentation/providers/employee_provider.dart';
 import 'package:notification_flutter_app/presentation/widgets/loader.dart';
 import 'package:notification_flutter_app/presentation/widgets/top_snake_bar.dart';
 import 'package:notification_flutter_app/utils/extention.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TaskDetailHeroPage extends StatefulWidget {
   final String imageUrl;
   final Task task;
   final bool isCompleyedButtonVisible;
-  final Future<bool> Function()? onPressed;
 
   const TaskDetailHeroPage({
     super.key,
     required this.imageUrl,
     required this.task,
     this.isCompleyedButtonVisible = false,
-    this.onPressed,
   });
 
   @override
@@ -29,6 +29,8 @@ class _TaskDetailHeroPageState extends State<TaskDetailHeroPage> {
 
   @override
   Widget build(BuildContext context) {
+    final EmployeProvider data = context.read<EmployeProvider>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
@@ -93,29 +95,6 @@ class _TaskDetailHeroPageState extends State<TaskDetailHeroPage> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
-                        onPressed: (widget.task.isTaskCompleted ||
-                                isTaskCompleted)
-                            ? null
-                            : () async {
-                                LoaderDialog.show(context: context);
-                                final status = widget.onPressed != null
-                                    ? await widget.onPressed!()
-                                    : false;
-                                LoaderDialog.hide(context: context);
-
-                                setState(() {
-                                  if (status) {
-                                    isTaskCompleted = true;
-                                  }
-                                });
-                                showTopSnackBar(
-                                  context: context,
-                                  message: status
-                                      ? 'Task marked as completed!'
-                                      : 'Failed to marked as completed!',
-                                  bgColor: status ? Colors.green : Colors.red,
-                                );
-                              },
                         icon: const Icon(Icons.check_circle_outline),
                         label: const Text('Mark as Completed'),
                         style: ElevatedButton.styleFrom(
@@ -129,6 +108,28 @@ class _TaskDetailHeroPageState extends State<TaskDetailHeroPage> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
+                        onPressed: (widget.task.isTaskCompleted ||
+                                isTaskCompleted)
+                            ? null
+                            : () async {
+                                LoaderDialog.show(context: context);
+                                final status = await data.updateTaskStatus(
+                                    taskId: widget.task.id ?? '');
+                                LoaderDialog.hide(context: context);
+                                showTopSnackBar(
+                                  context: context,
+                                  message: status
+                                      ? 'Task Completed'
+                                      : 'Failed to update',
+                                  bgColor: status ? Colors.green : Colors.red,
+                                );
+
+                                setState(() {
+                                  if (status) {
+                                    isTaskCompleted = true;
+                                  }
+                                });
+                              },
                       ),
                     ),
                 ],
