@@ -172,8 +172,12 @@ class EmployeProvider extends ChangeNotifier {
     final filteredTasks = taskList
         .where((task) => task.mobileNumber == userMobileNumber)
         .toList();
-    filteredTasks
-        .sort((a, b) => a.taskComplitionDate.compareTo(b.taskComplitionDate));
+    filteredTasks.sort((a, b) {
+      // Put incomplete tasks first
+      if (a.isTaskCompleted && !b.isTaskCompleted) return 1;
+      if (!a.isTaskCompleted && b.isTaskCompleted) return -1;
+      return a.taskComplitionDate.compareTo(b.taskComplitionDate);
+    });
     return filteredTasks;
   }
 
