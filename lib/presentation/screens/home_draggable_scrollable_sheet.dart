@@ -300,11 +300,24 @@ class _HomeDraggableScrollableSheetState
       await LocalNotification.cancelAllNotification();
 
       for (var task in filteredTasks) {
-        final taskDate = DateTime.parse(task.taskComplitionDate);
-        final currentDate = DateTime.now();
-        final remainingDays = taskDate.difference(currentDate).inDays;
-        if (remainingDays >= 0 && !task.isTaskCompleted) {
-          //Object creation to pass in  LocalNotification payload
+        final TZDateTime now = TZDateTime.now(local);
+
+        if (!task.isTaskCompleted) {
+          final taskDate = DateTime.parse(task.taskComplitionDate);
+
+          var notificationDate = TZDateTime(
+              local, taskDate.year, taskDate.month, taskDate.day,  21, 5, 0);
+
+          // set taskScheduledDate to 9 AM for due task
+          if (taskDate.isBefore(now)) {
+            notificationDate =
+                TZDateTime(local, now.year, now.month, now.day,  9, 0, 0);
+            if (notificationDate.isBefore(now)) {
+              notificationDate = notificationDate.add(const Duration(days: 1));
+            }
+          }
+
+          // Object creation to pass in LocalNotification payload
           final taskDetailsWithImageUrl = TaskDetailsWithImageUrl(
             task: task,
             imageUrl: 'assets/login/rod_stock.jpg',
@@ -313,26 +326,19 @@ class _HomeDraggableScrollableSheetState
           final payload = taskDetailsWithImageUrl.toString();
 
           // Schedule a local notification
-          await LocalNotification.scheduleReminder(
+          await LocalNotification.scheduleReminderForTask(
             id: LocalNotification.notificationId++,
             title: task.employeeName,
             body: task.description,
             payload: payload,
-            scheduledDate: TZDateTime(
-              local,
-              taskDate.year,
-              taskDate.month,
-              taskDate.day,
-              10,
-              0,
-            ),
+            scheduledDate: notificationDate,
           );
         }
       }
       globalStore.needToAddNotification = false;
     }
-    // Stting up 9 AM notification every Day
-    await LocalNotification.scheduleDaily9AMNotification();
+    // Stting up 8 AM notification every Day
+    await LocalNotification.scheduleDaily8AMNotification();
     // See all pendingNotification notifications
     await LocalNotification.pendingNotification();
   }

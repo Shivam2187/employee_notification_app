@@ -48,7 +48,7 @@ class LocalNotification {
     }
   }
 
-  static Future<void> scheduleReminder({
+  static Future<void> scheduleReminderForTask({
     required int id,
     required String title,
     required String body,
@@ -82,27 +82,23 @@ class LocalNotification {
     );
   }
 
-  static Future<void> scheduleDaily9AMNotification() async {
+  static Future<void> scheduleDaily8AMNotification() async {
     final TZDateTime now = TZDateTime.now(local);
 
-    // Set to next 9 AM
-    TZDateTime scheduledDate = TZDateTime(
-      local,
-      now.year,
-      now.month,
-      now.day,
-      9,
-    );
-
+    //Set to next 8 AM
+    TZDateTime scheduledDate =
+        TZDateTime(local, now.year, now.month, now.day, 8, 0, 0);
+    // Set the time to 8 AM today (or tomorrow if it's already past 8 AM)
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
 
     await notificationsPlugin.zonedSchedule(
-      -1,
+      200,
       'Good Morning Sir!',
       'Please Look into your daily tasks.',
       scheduledDate,
+      payload: '',
       const NotificationDetails(
         android: AndroidNotificationDetails(
           'daily_channel_id',

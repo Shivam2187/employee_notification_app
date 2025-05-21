@@ -43,16 +43,18 @@ class _HomePageState extends State<HomePage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TaskDetailHeroPage(
-              task: Task(
-                employeeName: object.task.employeeName,
-                description: object.task.description,
-                locationLink: object.task.locationLink,
-                mobileNumber: object.task.mobileNumber,
-                taskComplitionDate: object.task.taskComplitionDate,
-              ),
-              imageUrl: object.imageUrl,
-            ),
+            builder: (context) => payload.isNotEmpty
+                ? TaskDetailHeroPage(
+                    task: Task(
+                      employeeName: object.task.employeeName,
+                      description: object.task.description,
+                      locationLink: object.task.locationLink,
+                      mobileNumber: object.task.mobileNumber,
+                      taskComplitionDate: object.task.taskComplitionDate,
+                    ),
+                    imageUrl: object.imageUrl,
+                  )
+                : const HomePage(),
           ),
         );
       },
