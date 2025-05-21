@@ -306,7 +306,7 @@ class _HomeDraggableScrollableSheetState
           final taskDate = DateTime.parse(task.taskComplitionDate);
 
           var notificationDate = TZDateTime(
-              local, taskDate.year, taskDate.month, taskDate.day,  21, 5, 0);
+              local, taskDate.year, taskDate.month, taskDate.day,  9, 0, 0);
 
           // set taskScheduledDate to 9 AM for due task
           if (taskDate.isBefore(now)) {
