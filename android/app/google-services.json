@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "191351733632",
+    "project_id": "employee-notification-app",
+    "storage_bucket": "employee-notification-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:191351733632:android:534aa876f83ae3c976d565",
+        "android_client_info": {
+          "package_name": "com.example.employee_notification_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATCm4YZ2KkyPgV0T9KxfruG2SrvwjDxow"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
