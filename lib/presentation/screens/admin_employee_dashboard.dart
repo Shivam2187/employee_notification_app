@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:lottie/lottie.dart';
 import 'package:notification_flutter_app/presentation/widgets/add_employee_bottomsheet.dart';
 import 'package:notification_flutter_app/presentation/widgets/employee_details_dialog.dart';
@@ -52,67 +53,88 @@ class _AdminEmployeeDashboardState extends State<AdminEmployeeDashboard> {
                     ),
                     if (filteredEmployeeList.isNotEmpty)
                       Expanded(
-                        child: ListView.builder(
-                          padding: const EdgeInsets.only(bottom: 32),
-                          keyboardDismissBehavior:
-                              ScrollViewKeyboardDismissBehavior.onDrag,
-                          itemCount: filteredEmployeeList.length,
-                          itemBuilder: (ctx, index) {
-                            final employeeDetails = filteredEmployeeList[index];
-                            final initialText =
-                                employeeDetails.employeeName.getInitials();
-                            return Card(
-                              margin: const EdgeInsets.all(8),
-                              child: ListTile(
-                                title: Text(employeeDetails.employeeName),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(employeeDetails.employeeMobileNumber),
-                                    if (employeeDetails.emailId?.isNotEmpty ??
-                                        false)
-                                      Text(employeeDetails.emailId!),
-                                  ],
-                                ),
-                                leading: CircleAvatar(
-                                  backgroundColor: Colors.blue,
-                                  child: initialText.isEmpty
-                                      ? const Icon(Icons.person)
-                                      : Text(
-                                          employeeDetails.employeeName
-                                              .getInitials(),
-                                          style: const TextStyle(
-                                              color: Colors.white),
+                        child: AnimationLimiter(
+                          child: ListView.builder(
+                            padding: const EdgeInsets.only(bottom: 32),
+                            keyboardDismissBehavior:
+                                ScrollViewKeyboardDismissBehavior.onDrag,
+                            itemCount: filteredEmployeeList.length,
+                            itemBuilder: (ctx, index) {
+                              final employeeDetails =
+                                  filteredEmployeeList[index];
+                              final initialText =
+                                  employeeDetails.employeeName.getInitials();
+                              return AnimationConfiguration.staggeredList(
+                                position: index,
+                                child: SlideAnimation(
+                                  horizontalOffset: 200,
+                                  duration: const Duration(milliseconds: 800),
+                                  child: FadeInAnimation(
+                                    duration: const Duration(milliseconds: 800),
+                                    child: Card(
+                                      margin: const EdgeInsets.all(8),
+                                      child: ListTile(
+                                        title:
+                                            Text(employeeDetails.employeeName),
+                                        subtitle: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(employeeDetails
+                                                .employeeMobileNumber),
+                                            if (employeeDetails
+                                                    .emailId?.isNotEmpty ??
+                                                false)
+                                              Text(employeeDetails.emailId!),
+                                          ],
                                         ),
+                                        leading: CircleAvatar(
+                                          backgroundColor: Colors.blue,
+                                          child: initialText.isEmpty
+                                              ? const Icon(Icons.person)
+                                              : Text(
+                                                  employeeDetails.employeeName
+                                                      .getInitials(),
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                        ),
+                                        onTap: () => employeeDetailsDialog(
+                                            employeeDetails, context),
+                                        trailing: IconButton(
+                                          icon: Lottie.asset(
+                                              'assets/animations/delete.json',
+                                              repeat: true,
+                                              width: 50,
+                                              height: 50),
+                                          onPressed: () async {
+                                            if (employeeDetails.id == null)
+                                              return;
+                                            // Calling Delete Task API
+                                            LoaderDialog.show(context: context);
+                                            final status =
+                                                await data.deleteEmployee(
+                                                    employeeId:
+                                                        employeeDetails.id!);
+                                            LoaderDialog.hide(context: context);
+                                            showTopSnackBar(
+                                              context: context,
+                                              message: status
+                                                  ? 'Succesfully deleted'
+                                                  : 'Failed to delete',
+                                              bgColor: status
+                                                  ? Colors.green
+                                                  : Colors.red,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                                onTap: () => employeeDetailsDialog(
-                                    employeeDetails, context),
-                                trailing: IconButton(
-                                  icon: Lottie.asset(
-                                      'assets/animations/delete.json',
-                                      repeat: true,
-                                      width: 50,
-                                      height: 50),
-                                  onPressed: () async {
-                                    if (employeeDetails.id == null) return;
-                                    // Calling Delete Task API
-                                    LoaderDialog.show(context: context);
-                                    final status = await data.deleteEmployee(
-                                        employeeId: employeeDetails.id!);
-                                    LoaderDialog.hide(context: context);
-                                    showTopSnackBar(
-                                      context: context,
-                                      message: status
-                                          ? 'Succesfully deleted'
-                                          : 'Failed to delete',
-                                      bgColor:
-                                          status ? Colors.green : Colors.red,
-                                    );
-                                  },
-                                ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
                       ),
                     if (filteredEmployeeList.isEmpty)

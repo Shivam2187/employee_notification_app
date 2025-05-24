@@ -119,8 +119,8 @@ class _TaskDetailHeroPageState extends State<TaskDetailHeroPage> {
                                 showTopSnackBar(
                                   context: context,
                                   message: status
-                                      ? 'Task Completed'
-                                      : 'Failed to update',
+                                      ? 'Task Marked as Completed'
+                                      : 'Failed to update Task status',
                                   bgColor: status ? Colors.green : Colors.red,
                                 );
 

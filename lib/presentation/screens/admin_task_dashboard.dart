@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:notification_flutter_app/data/models/task.dart';
@@ -41,107 +42,126 @@ class AdminTaskDashboard extends StatelessWidget {
               ),
               if (filteredTaskList.isNotEmpty)
                 Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    keyboardDismissBehavior:
-                        ScrollViewKeyboardDismissBehavior.onDrag,
-                    itemCount: filteredTaskList.length,
-                    itemBuilder: (context, index) {
-                      final currentTask = filteredTaskList[index];
-                      final remaningDays = getRemainingDays(currentTask);
-                      return Card(
-                        margin: const EdgeInsets.all(8),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.only(left: 8),
-                          leading: Hero(
-                            tag: currentTask.id ?? '',
-                            flightShuttleBuilder: (flightContext, animation,
-                                direction, fromContext, toContext) {
-                              return Image.asset(imageUrl);
-                            },
-                            child: CircleAvatar(
-                              backgroundColor: Colors.blue,
-                              child: Text(
-                                ('#${index + 1}').toString(),
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                          title: Text(
-                            currentTask.employeeName,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              LinkifyWidget(
-                                description: currentTask.description,
-                              ),
-                              Text(
-                                'Due Date: ${currentTask.taskComplitionDate.toSlashDate()}',
-                              ),
-                              Shimmer.fromColors(
-                                baseColor: remaningDays <= 0
-                                    ? Colors.red
-                                    : remaningDays == 1
-                                        ? Colors.blue
-                                        : Colors.grey.shade600,
-                                highlightColor: Colors.white,
-                                child: Text(
-                                  remaningDays <= 0
-                                      ? 'Overdue'
-                                      : remaningDays == 1
-                                          ? 'Due Today'
-                                          : '$remaningDays days left',
-                                  style: TextStyle(
-                                    color: remaningDays <= 0
-                                        ? Colors.red
-                                        : Colors.grey.shade600,
-                                    fontWeight: FontWeight.bold,
+                  child: AnimationLimiter(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      keyboardDismissBehavior:
+                          ScrollViewKeyboardDismissBehavior.onDrag,
+                      itemCount: filteredTaskList.length,
+                      itemBuilder: (context, index) {
+                        final currentTask = filteredTaskList[index];
+                        final remaningDays = getRemainingDays(currentTask);
+                        return AnimationConfiguration.staggeredList(
+                          position: index,
+                          child: SlideAnimation(
+                            horizontalOffset: 200,
+                            duration: const Duration(milliseconds: 800),
+                            child: FadeInAnimation(
+                              duration: const Duration(milliseconds: 800),
+                              child: Card(
+                                margin: const EdgeInsets.all(8),
+                                child: ListTile(
+                                  contentPadding:
+                                      const EdgeInsets.only(left: 8),
+                                  leading: Hero(
+                                    tag: currentTask.id ?? '',
+                                    flightShuttleBuilder: (flightContext,
+                                        animation,
+                                        direction,
+                                        fromContext,
+                                        toContext) {
+                                      return Image.asset(imageUrl);
+                                    },
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.blue,
+                                      child: Text(
+                                        ('#${index + 1}').toString(),
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ),
                                   ),
+                                  title: Text(
+                                    currentTask.employeeName,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      LinkifyWidget(
+                                        description: currentTask.description,
+                                      ),
+                                      Text(
+                                        'Due Date: ${currentTask.taskComplitionDate.toSlashDate()}',
+                                      ),
+                                      Shimmer.fromColors(
+                                        baseColor: remaningDays <= 0
+                                            ? Colors.red
+                                            : remaningDays == 1
+                                                ? Colors.blue
+                                                : Colors.grey.shade600,
+                                        highlightColor: Colors.white,
+                                        child: Text(
+                                          remaningDays <= 0
+                                              ? 'Overdue'
+                                              : remaningDays == 1
+                                                  ? 'Due Today'
+                                                  : '$remaningDays days left',
+                                          style: TextStyle(
+                                            color: remaningDays <= 0
+                                                ? Colors.red
+                                                : Colors.grey.shade600,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  trailing: IconButton(
+                                    icon: Lottie.asset(
+                                      'assets/animations/delete.json',
+                                      repeat: true,
+                                      width: 50,
+                                      height: 50,
+                                    ),
+                                    onPressed: () async {
+                                      if (currentTask.id == null) return;
+                                      // Calling Delete Task API
+                                      LoaderDialog.show(context: context);
+                                      final status = await data.deleteTask(
+                                          taskId: currentTask.id!);
+                                      LoaderDialog.hide(context: context);
+                                      showTopSnackBar(
+                                        context: context,
+                                        message: status
+                                            ? 'Succesfully deleted'
+                                            : 'Failed to delete',
+                                        bgColor:
+                                            status ? Colors.green : Colors.red,
+                                      );
+                                    },
+                                  ),
+                                  onTap: () {
+                                    context.push(
+                                      '/taskDetailHeroPage',
+                                      extra: TaskDetailsWithImageUrl(
+                                        task: currentTask,
+                                        imageUrl: imageUrl,
+                                        isCompletedButtonVisible: true,
+                                      ),
+                                    );
+                                  },
                                 ),
-                              )
-                            ],
-                          ),
-                          trailing: IconButton(
-                            icon: Lottie.asset(
-                              'assets/animations/delete.json',
-                              repeat: true,
-                              width: 50,
-                              height: 50,
-                            ),
-                            onPressed: () async {
-                              if (currentTask.id == null) return;
-                              // Calling Delete Task API
-                              LoaderDialog.show(context: context);
-                              final status = await data.deleteTask(
-                                  taskId: currentTask.id!);
-                              LoaderDialog.hide(context: context);
-                              showTopSnackBar(
-                                context: context,
-                                message: status
-                                    ? 'Succesfully deleted'
-                                    : 'Failed to delete',
-                                bgColor: status ? Colors.green : Colors.red,
-                              );
-                            },
-                          ),
-                          onTap: () {
-                            context.push(
-                              '/taskDetailHeroPage',
-                              extra: TaskDetailsWithImageUrl(
-                                task: currentTask,
-                                imageUrl: imageUrl,
-                                isCompletedButtonVisible: true,
                               ),
-                            );
-                          },
-                        ),
-                      );
-                    },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               // if (filteredTaskList.isEmpty) ...[
