@@ -5,13 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:notification_flutter_app/core/hive_service.dart';
-import 'package:notification_flutter_app/core/local_notification.dart';
 import 'package:notification_flutter_app/core/locator.dart';
-import 'package:notification_flutter_app/data/models/task.dart';
 import 'package:notification_flutter_app/presentation/providers/employee_provider.dart';
-import 'package:notification_flutter_app/presentation/screens/admin_task_dashboard.dart';
 import 'package:notification_flutter_app/presentation/screens/home_draggable_scrollable_sheet.dart';
-import 'package:notification_flutter_app/presentation/widgets/task_detail_hero_page.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -27,39 +23,39 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    init();
+    // init();
   }
 
-  Future<void> init() async {
-    await LocalNotification.init();
-    listenToNotification();
-  }
+  // Future<void> init() async {
+  //   await LocalNotification.init();
+  //   listenToNotification();
+  // }
 
   // Listen for notification taps
-  void listenToNotification() {
-    LocalNotification.onClickNotification.listen(
-      (payload) {
-        final object = TaskDetailsWithImageUrl.fromString(payload);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => payload.isNotEmpty
-                ? TaskDetailHeroPage(
-                    task: Task(
-                      employeeName: object.task.employeeName,
-                      description: object.task.description,
-                      locationLink: object.task.locationLink,
-                      mobileNumber: object.task.mobileNumber,
-                      taskComplitionDate: object.task.taskComplitionDate,
-                    ),
-                    imageUrl: object.imageUrl,
-                  )
-                : const HomePage(),
-          ),
-        );
-      },
-    );
-  }
+  // void listenToNotification() {
+  //   LocalNotification.onClickNotification.listen(
+  //     (payload) {
+  //       final object = TaskDetailsWithImageUrl.fromString(payload);
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => payload.isNotEmpty
+  //               ? TaskDetailHeroPage(
+  //                   task: Task(
+  //                     employeeName: object.task.employeeName,
+  //                     description: object.task.description,
+  //                     locationLink: object.task.locationLink,
+  //                     mobileNumber: object.task.mobileNumber,
+  //                     taskComplitionDate: object.task.taskComplitionDate,
+  //                   ),
+  //                   imageUrl: object.imageUrl,
+  //                 )
+  //               : const HomePage(),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   Future<void> _onRefresh(BuildContext ctx) async {
     await ctx.read<EmployeProvider>().fetchAllTask();

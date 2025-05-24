@@ -2,7 +2,6 @@ import 'package:animated_icon/animated_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:notification_flutter_app/core/local_notification.dart';
 import 'package:notification_flutter_app/core/locator.dart';
 import 'package:notification_flutter_app/data/models/task.dart';
 import 'package:notification_flutter_app/presentation/providers/global_store.dart';
@@ -15,7 +14,6 @@ import 'package:provider/provider.dart';
 import 'package:notification_flutter_app/presentation/providers/employee_provider.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:timezone/timezone.dart';
 
 class HomeDraggableScrollableSheet extends StatefulWidget {
   final ScrollController scrollController;
@@ -46,7 +44,7 @@ class _HomeDraggableScrollableSheetState
   Future<void> _fetchTasks() async {
     try {
       await context.read<EmployeProvider>().fetchAllTask();
-      setNotificationForRemainingTask();
+      // setNotificationForRemainingTask();
     } catch (e) {
       setState(() => _error = e.toString());
     } finally {
@@ -288,60 +286,60 @@ class _HomeDraggableScrollableSheetState
     }
   }
 
-// add notification  for task
-  Future<void> setNotificationForRemainingTask() async {
-    // add notification for remaining task
-    if (globalStore.needToAddNotification) {
-      final filteredTasks =
-          context.read<EmployeProvider>().getFilteredAndSortedTask(
-                userMobileNumber: userMobileNumber ?? '',
-              );
-      // Cancel all pendingNotification notifications
-      await LocalNotification.cancelAllNotification();
+// // add notification  for task
+//   Future<void> setNotificationForRemainingTask() async {
+//     // add notification for remaining task
+//     if (globalStore.needToAddNotification) {
+//       final filteredTasks =
+//           context.read<EmployeProvider>().getFilteredAndSortedTask(
+//                 userMobileNumber: userMobileNumber ?? '',
+//               );
+//       // Cancel all pendingNotification notifications
+//       await LocalNotification.cancelAllNotification();
 
-      for (var task in filteredTasks) {
-        final TZDateTime now = TZDateTime.now(local);
+//       for (var task in filteredTasks) {
+//         final TZDateTime now = TZDateTime.now(local);
 
-        if (!task.isTaskCompleted) {
-          final taskDate = DateTime.parse(task.taskComplitionDate);
+//         if (!task.isTaskCompleted) {
+//           final taskDate = DateTime.parse(task.taskComplitionDate);
 
-          var notificationDate = TZDateTime(
-              local, taskDate.year, taskDate.month, taskDate.day, 9, 0, 0);
+//           var notificationDate = TZDateTime(
+//               local, taskDate.year, taskDate.month, taskDate.day, 9, 0, 0);
 
-          // set taskScheduledDate to 9 AM for due task
-          if (taskDate.isBefore(now)) {
-            notificationDate =
-                TZDateTime(local, now.year, now.month, now.day, 9, 0, 0);
-            if (notificationDate.isBefore(now)) {
-              notificationDate = notificationDate.add(const Duration(days: 1));
-            }
-          }
+//           // set taskScheduledDate to 9 AM for due task
+//           if (taskDate.isBefore(now)) {
+//             notificationDate =
+//                 TZDateTime(local, now.year, now.month, now.day, 9, 0, 0);
+//             if (notificationDate.isBefore(now)) {
+//               notificationDate = notificationDate.add(const Duration(days: 1));
+//             }
+//           }
 
-          // Object creation to pass in LocalNotification payload
-          final taskDetailsWithImageUrl = TaskDetailsWithImageUrl(
-            task: task,
-            imageUrl: 'assets/login/rod_stock.jpg',
-          );
+//           // Object creation to pass in LocalNotification payload
+//           final taskDetailsWithImageUrl = TaskDetailsWithImageUrl(
+//             task: task,
+//             imageUrl: 'assets/login/rod_stock.jpg',
+//           );
 
-          final payload = taskDetailsWithImageUrl.toString();
+//           final payload = taskDetailsWithImageUrl.toString();
 
-          // Schedule a local notification
-          await LocalNotification.scheduleReminderForTask(
-            id: LocalNotification.notificationId++,
-            title: task.employeeName,
-            body: task.description,
-            payload: payload,
-            scheduledDate: notificationDate,
-          );
-        }
-      }
-      globalStore.needToAddNotification = false;
-    }
-    // Stting up 8 AM notification every Day
-    await LocalNotification.scheduleDaily8AMNotification();
-    // See all pendingNotification notifications
-    await LocalNotification.pendingNotification();
-  }
+//           // Schedule a local notification
+//           await LocalNotification.scheduleReminderForTask(
+//             id: LocalNotification.notificationId++,
+//             title: task.employeeName,
+//             body: task.description,
+//             payload: payload,
+//             scheduledDate: notificationDate,
+//           );
+//         }
+//       }
+//       globalStore.needToAddNotification = false;
+//     }
+//     // Stting up 8 AM notification every Day
+//     await LocalNotification.scheduleDaily8AMNotification();
+//     // See all pendingNotification notifications
+//     await LocalNotification.pendingNotification();
+//   }
 }
 
 class ArrowDownWidget extends StatelessWidget {
