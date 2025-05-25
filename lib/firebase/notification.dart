@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:notification_flutter_app/firebase/fmc_token_manager.dart';
 
 // class LocalNotification {
 //   static const String channelId = 'your_channel_id';
@@ -151,14 +152,13 @@ class NotificationService {
       _showFlutterNotication(message);
     });
 
-    /// Get FMC token
-    await _getFmcToken();
-
     /// Initialize the local notification
     await _initializeLocalNotification();
 
     /// Get the initial notification
     await _getInitialNotification();
+
+    fetchFmcToken();
   }
 
   ///  Handle background messages
@@ -176,8 +176,11 @@ class NotificationService {
 
   /// Get the FCM token
 
-  static Future<void> _getFmcToken() async {
+  static Future<void> fetchFmcToken() async {
     String? token = await _firebaseMessaging.getToken() ?? '';
+
+    await FCMTokenManager().storeUpdatedToken(token);
+
     print('********* FCM Token: $token');
   }
 

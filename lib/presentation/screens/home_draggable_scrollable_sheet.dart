@@ -2,7 +2,6 @@ import 'package:animated_icon/animated_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:notification_flutter_app/core/locator.dart';
 import 'package:notification_flutter_app/data/models/task.dart';
 import 'package:notification_flutter_app/presentation/providers/global_store.dart';
 import 'package:notification_flutter_app/presentation/screens/admin_task_dashboard.dart';
@@ -31,7 +30,7 @@ class _HomeDraggableScrollableSheetState
     extends State<HomeDraggableScrollableSheet> {
   bool _isLoading = true;
   String? _error;
-  final globalStore = locator.get<GlobalStroe>();
+  final globalStore = GlobalStroe();
   String? userMobileNumber;
 
   @override

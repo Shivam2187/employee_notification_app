@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print
 
 import 'package:http/http.dart' as http;
-import 'package:notification_flutter_app/core/locator.dart';
 import 'dart:convert';
 
 import 'package:notification_flutter_app/data/models/employee.dart';
@@ -13,6 +12,7 @@ class SanityService {
   String projectId = 'tqenxrzt';
   String dataset = 'production';
   String apiVersion = "v2025-05-10";
+  final GlobalStroe globalStore = GlobalStroe();
 
   // Fetch Secret Key (GET request)
   Future<List<SecretKey>> fetchSecretKey() async {
@@ -45,8 +45,7 @@ class SanityService {
         'https://$projectId.api.sanity.io/$apiVersion/data/mutate/$dataset';
     final headers = {
       'Content-Type': 'application/json',
-      'Authorization':
-          'Bearer ${locator.get<GlobalStroe>().getSecretValue(key: 'apiKey')}',
+      'Authorization': 'Bearer ${globalStore.getSecretValue(key: 'apiKey')}',
     };
 
     final body = jsonEncode({
@@ -106,8 +105,7 @@ class SanityService {
         'https://$projectId.api.sanity.io/$apiVersion/data/mutate/$dataset';
     final headers = {
       'Content-Type': 'application/json',
-      'Authorization':
-          'Bearer ${locator.get<GlobalStroe>().getSecretValue(key: 'apiKey')}',
+      'Authorization': 'Bearer ${globalStore.getSecretValue(key: 'apiKey')}',
     };
 
     final body = jsonEncode({
@@ -146,8 +144,7 @@ class SanityService {
         'https://$projectId.api.sanity.io/$apiVersion/data/mutate/$dataset';
     final headers = {
       'Content-Type': 'application/json',
-      'Authorization':
-          'Bearer ${locator.get<GlobalStroe>().getSecretValue(key: 'apiKey')}',
+      'Authorization': 'Bearer ${globalStore.getSecretValue(key: 'apiKey')}',
     };
 
     final body = jsonEncode({
@@ -207,8 +204,7 @@ class SanityService {
         'https://$projectId.api.sanity.io/$apiVersion/data/mutate/$dataset';
     final headers = {
       'Content-Type': 'application/json',
-      'Authorization':
-          'Bearer ${locator.get<GlobalStroe>().getSecretValue(key: 'apiKey')}',
+      'Authorization': 'Bearer ${globalStore.getSecretValue(key: 'apiKey')}',
     };
 
     final body = jsonEncode({
@@ -243,8 +239,7 @@ class SanityService {
         'https://$projectId.api.sanity.io/$apiVersion/data/mutate/$dataset';
     final headers = {
       'Content-Type': 'application/json',
-      'Authorization':
-          'Bearer ${locator.get<GlobalStroe>().getSecretValue(key: 'apiKey')}',
+      'Authorization': 'Bearer ${globalStore.getSecretValue(key: 'apiKey')}',
     };
 
     final body = jsonEncode({

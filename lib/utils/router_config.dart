@@ -1,5 +1,4 @@
 import 'package:go_router/go_router.dart';
-import 'package:notification_flutter_app/core/locator.dart';
 import 'package:notification_flutter_app/presentation/providers/global_store.dart';
 import 'package:notification_flutter_app/presentation/screens/admin_page.dart';
 import 'package:notification_flutter_app/presentation/screens/admin_task_dashboard.dart';
@@ -8,9 +7,8 @@ import 'package:notification_flutter_app/presentation/screens/login/login_page.d
 import 'package:notification_flutter_app/presentation/widgets/task_detail_hero_page.dart';
 
 final routerConfig = GoRouter(
-  initialLocation: locator.get<GlobalStroe>().userMobileNumber?.isEmpty ?? true
-      ? '/loginPage'
-      : '/',
+  initialLocation:
+      GlobalStroe().userMobileNumber?.isEmpty ?? true ? '/loginPage' : '/',
   routes: [
     GoRoute(
       name:

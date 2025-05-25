@@ -10,6 +10,13 @@ class GlobalStroe {
   List<SecretKey> _secretKeyList = [];
   bool needToAddNotification = true;
 
+  // Singleton instance
+  GlobalStroe._privateConstructor();
+  static final GlobalStroe _instance = GlobalStroe._privateConstructor();
+  factory GlobalStroe() {
+    return _instance;
+  }
+
   void init() async {
     await fetchSecretValue();
   }

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:notification_flutter_app/core/hive_service.dart';
 import 'package:notification_flutter_app/core/locator.dart';
+import 'package:notification_flutter_app/firebase/notification.dart';
 import 'package:notification_flutter_app/presentation/providers/global_store.dart';
 import 'package:notification_flutter_app/presentation/widgets/top_snake_bar.dart';
 import 'package:slider_button/slider_button.dart';
@@ -122,8 +123,12 @@ class _LoginPageState extends State<LoginPage> {
                             .get<HiveService>()
                             .saveMobileNumber(number: _emailController.text);
                         //save mobile number to global store
-                        locator.get<GlobalStroe>().userMobileNumber =
-                            _emailController.text;
+                        GlobalStroe().userMobileNumber = _emailController.text;
+
+                        /// fetch FCM token and store  in Firestore database
+
+                        await NotificationService.fetchFmcToken();
+
                         // navigate to home page
                         context.pushReplacement(
                           '/',
