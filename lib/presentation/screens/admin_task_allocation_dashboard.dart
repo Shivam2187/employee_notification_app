@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notification_flutter_app/data/models/employee.dart';
+import 'package:notification_flutter_app/data/models/task.dart';
+import 'package:notification_flutter_app/firebase/fmc_token_manager.dart';
 import 'package:notification_flutter_app/presentation/widgets/loader.dart';
 import 'package:notification_flutter_app/presentation/widgets/top_snake_bar.dart';
 import 'package:provider/provider.dart';
@@ -166,6 +168,18 @@ class _AdminTaskAllocationDashboardState
 
       if (status) {
         // Clear the input fields
+
+        final task = Task(
+          employeeName: selectedEmployee?.employeeName ?? '',
+          description: descriptionController.text,
+          emailId: selectedEmployee?.emailId ?? '',
+          taskComplitionDate: pickedDate.toString(),
+          locationLink: locationLinkController.text,
+          mobileNumber: selectedEmployee?.employeeMobileNumber ?? '',
+        );
+
+       await FCMTokenManager().sendTaskNotification(task: task);
+
         descriptionController.clear();
         locationLinkController.clear();
         _controller.clear();
