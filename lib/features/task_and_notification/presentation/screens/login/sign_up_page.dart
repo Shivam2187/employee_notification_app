@@ -78,6 +78,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           labelText: "Email*",
                           hintText: "Enter your email",
                           prefixIcon: Icon(Icons.email_outlined),
+                          fillColor: Colors.white,
+                          filled: true,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(12)),
                           ),
@@ -99,6 +101,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         decoration: const InputDecoration(
                           labelText: "Password*",
                           hintText: "Enter your password",
+                          fillColor: Colors.white,
+                          filled: true,
                           prefixIcon: Icon(Icons.lock_outline),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(12)),

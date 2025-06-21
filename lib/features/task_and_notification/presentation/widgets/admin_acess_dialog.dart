@@ -80,7 +80,10 @@ void showAdminAcessDialog(BuildContext context) async {
       actions: [
         ElevatedButton.icon(
           onPressed: submit,
-          icon: const Icon(Icons.check_circle_outline),
+          icon: const Icon(
+            Icons.check_circle_outline,
+            color: Colors.white,
+          ),
           label: const Text('Submit'),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.deepPurple,
