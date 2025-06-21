@@ -4,10 +4,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:notification_flutter_app/core/hive_service.dart';
-import 'package:notification_flutter_app/core/locator.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/employee_provider.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/home_draggable_scrollable_sheet.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
+import 'package:notification_flutter_app/firebase/login_service.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -90,13 +90,13 @@ class _HomePageState extends State<HomePage> {
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: GestureDetector(
-                                onTap: () {
-                                  locator
-                                      .get<HiveService>()
-                                      .clearAllMobileUsersData();
-                                  context.pushReplacement(
-                                    '/loginPage',
-                                  );
+                                onTap: () async {
+                                  LoaderDialog.show(context: context);
+                                  await UserAuthService().signOut();
+                                  if (mounted) {
+                                    LoaderDialog.hide(context: context);
+                                  }
+                                  context.go('/loginPage');
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(

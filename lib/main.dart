@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:notification_flutter_app/core/hive_service.dart';
 import 'package:notification_flutter_app/firebase/notification.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/user_login_info.dart';
 import 'package:notification_flutter_app/firebase/firebase_options.dart';
@@ -14,6 +13,7 @@ import 'package:notification_flutter_app/features/task_and_notification/presenta
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await Hive.initFlutter();
   Hive.registerAdapter(UserLoginInfoAdapter());
   await Hive.openBox<UserLoginInfo>('mobile_users');
@@ -36,11 +36,6 @@ class _HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GlobalStroe().userMobileNumber = locator
-        .get<HiveService>()
-        .getAllMobileNumbers()
-        .firstOrNull
-        ?.mobileNumber;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(

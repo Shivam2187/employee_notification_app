@@ -167,11 +167,12 @@ class EmployeProvider extends ChangeNotifier {
   }
 
   List<Task> getFilteredAndSortedTask({
-    required String userMobileNumber,
+    required String userEmail,
   }) {
-    final filteredTasks = taskList
-        .where((task) => task.mobileNumber == userMobileNumber)
-        .toList();
+    /// test
+
+    final filteredTasks =
+        taskList.where((task) => task.mobileNumber == userEmail).toList();
     filteredTasks.sort((a, b) {
       // Put incomplete tasks first
       if (a.isTaskCompleted && !b.isTaskCompleted) return 1;

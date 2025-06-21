@@ -1,47 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottie/lottie.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
-import 'package:notification_flutter_app/firebase/login_service.dart';
-import 'package:notification_flutter_app/firebase/notification.dart';
-import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/global_store.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
-import 'package:slider_button/slider_button.dart';
+import 'package:notification_flutter_app/firebase/login_service.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
-        useMaterial3: true,
-      ),
-      home: const LoginPage(),
-    );
-  }
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({
-    super.key,
-  });
+class _SignUpScreenState extends State<SignUpScreen> {
+  final emailCtrl = TextEditingController();
 
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
+  final passCtrl = TextEditingController();
 
-class _LoginPageState extends State<LoginPage> {
-  final _emailController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final _passwordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
   @override
   void dispose() {
-    _emailController.dispose();
+    emailCtrl.dispose();
+    passCtrl.dispose();
     super.dispose();
   }
 
@@ -49,27 +31,39 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: const Color(0xFFF4F6FA),
       body: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: Image.asset(
-              'assets/login/login.png',
+              'assets/login/register.png',
               fit: BoxFit.fill,
             ).image,
           ),
         ),
-        child: SingleChildScrollView(
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Lottie.asset(
-                  'assets/animations/welcome.json',
-                  repeat: true,
+                const Text(
+                  "Create Account",
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  "Please fill the form to sign up",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
                 ),
                 const SizedBox(height: 32),
                 Form(
@@ -78,13 +72,12 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     children: [
                       TextFormField(
-                        controller: _emailController,
+                        controller: emailCtrl,
                         keyboardType: TextInputType.emailAddress,
                         decoration: const InputDecoration(
                           labelText: "Email*",
                           hintText: "Enter your email",
                           prefixIcon: Icon(Icons.email_outlined),
-                          fillColor: Colors.white,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(12)),
                           ),
@@ -93,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                           if (value == null || value.isEmpty) {
                             return null;
                           }
-                          if (!value.contains("@")) {
+                          if (!value.contains('@')) {
                             return 'Enter a valid email';
                           }
                           return null;
@@ -101,12 +94,11 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
-                        controller: _passwordController,
+                        controller: passCtrl,
                         obscureText: true,
                         decoration: const InputDecoration(
                           labelText: "Password*",
                           hintText: "Enter your password",
-                          fillColor: Colors.white,
                           prefixIcon: Icon(Icons.lock_outline),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -125,50 +117,36 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
-                Center(
-                  child: SliderButton(
-                    buttonColor: Colors.grey.shade700,
-                    vibrationFlag: true,
-                    label: Text(
-                      "Slide to Sign In!",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.grey.shade700,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey.shade700,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    icon: const Icon(
-                      Icons.arrow_forward,
-                      color: Colors.white,
-                    ),
-                    action: () async {
-                      FocusManager.instance.primaryFocus?.unfocus();
+                    onPressed: () async {
+                      FocusScope.of(context).unfocus();
                       if ((_formKey.currentState?.validate() ?? false) &&
-                          _emailController.text.trim().isNotEmpty &&
-                          _passwordController.text.trim().isNotEmpty) {
-                        //save mobile number to global store
-                        GlobalStroe().userEmail = _emailController.text;
-
+                          emailCtrl.text.trim().isNotEmpty &&
+                          passCtrl.text.trim().isNotEmpty) {
                         LoaderDialog.show(context: context);
-                        // call login service
-                        final status = await UserAuthService().login(
-                          _emailController.text.trim(),
-                          _passwordController.text.trim(),
+                        final status = await UserAuthService().createUser(
+                          emailCtrl.text.trim(),
+                          passCtrl.text.trim(),
                         );
-
-                        /// fetch FCM token and store  in Firestore database
-                        await NotificationService.fetchFmcToken();
                         if (mounted) LoaderDialog.hide(context: context);
-
                         // navigate to home page and remove all previous routes
+
                         if (status) {
                           context.go('/');
                         } else {
                           showTopSnackBar(
                             context: context,
-                            message: "Login failed. Please try again.",
+                            message: "Sign Up failed. Please try again.",
                             bgColor: Colors.red,
                           );
                         }
@@ -179,23 +157,25 @@ class _LoginPageState extends State<LoginPage> {
                           bgColor: Colors.red,
                         );
                       }
-
-                      return false;
                     },
+                    child: const Text(
+                      "Sign Up",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Text("Don't have an account?"),
+                const Text("Already have an account?"),
                 TextButton(
                   onPressed: () {
                     FocusScope.of(context).unfocus();
-                    context.push('/signUpScreen');
+                    context.pop();
                   },
-                  child: const Text("Sign Up"),
-                ),
-                Lottie.asset(
-                  'assets/animations/dancing.json',
-                  repeat: true,
+                  child: const Text("Sign In"),
                 ),
               ],
             ),

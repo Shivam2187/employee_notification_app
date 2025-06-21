@@ -20,7 +20,7 @@ class FCMTokenManager {
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final mobileNumber = GlobalStroe().userMobileNumber;
+  final mobileNumber = GlobalStroe().userEmail;
 
   // Initialize FCM and set up token listeners
   Future<void> storeUpdatedToken(String? token) async {
@@ -85,7 +85,7 @@ class FCMTokenManager {
 
   // Send notification when task is submitted
   Future<void> sendTaskNotification({
-    required  Task task,
+    required Task task,
   }) async {
     try {
       // 1. Get recipient's FCM token
