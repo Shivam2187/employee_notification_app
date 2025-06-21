@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:notification_flutter_app/core/locator.dart';
 import 'package:notification_flutter_app/core/sanity_service.dart';
-import 'package:notification_flutter_app/data/models/employee.dart';
-import 'package:notification_flutter_app/data/models/task.dart';
+import 'package:notification_flutter_app/features/task_and_notification/data/models/employee.dart';
+import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
 
 class EmployeProvider extends ChangeNotifier {
   List<Employee> _employees = [];

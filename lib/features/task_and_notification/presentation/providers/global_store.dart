@@ -3,7 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:notification_flutter_app/core/locator.dart';
 import 'package:notification_flutter_app/core/sanity_service.dart';
-import 'package:notification_flutter_app/data/models/secret_key.dart';
+import 'package:notification_flutter_app/features/task_and_notification/data/models/secret_key.dart';
 
 class GlobalStroe {
   String? userMobileNumber;

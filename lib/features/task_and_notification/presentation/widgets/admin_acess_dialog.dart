@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:notification_flutter_app/presentation/providers/employee_provider.dart';
-import 'package:notification_flutter_app/presentation/providers/global_store.dart';
-import 'package:notification_flutter_app/presentation/widgets/loader.dart';
-import 'package:notification_flutter_app/presentation/widgets/top_snake_bar.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/employee_provider.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/global_store.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
 import 'package:provider/provider.dart';
 
 void showAdminAcessDialog(BuildContext context) async {

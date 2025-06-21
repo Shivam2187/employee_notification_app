@@ -1,10 +1,10 @@
 import 'package:go_router/go_router.dart';
-import 'package:notification_flutter_app/presentation/providers/global_store.dart';
-import 'package:notification_flutter_app/presentation/screens/admin_page.dart';
-import 'package:notification_flutter_app/presentation/screens/admin_task_dashboard.dart';
-import 'package:notification_flutter_app/presentation/screens/home_page.dart';
-import 'package:notification_flutter_app/presentation/screens/login/login_page.dart';
-import 'package:notification_flutter_app/presentation/widgets/task_detail_hero_page.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/global_store.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/admin_page.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/admin_task_dashboard.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/home_page.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/login/login_page.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/task_detail_hero_page.dart';
 
 final routerConfig = GoRouter(
   initialLocation:

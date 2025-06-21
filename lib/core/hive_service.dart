@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:notification_flutter_app/data/models/user_login_info.dart';
+import 'package:notification_flutter_app/features/task_and_notification/data/models/user_login_info.dart';
 
 class HiveService {
   Future<void> saveMobileNumber({required String number}) async {

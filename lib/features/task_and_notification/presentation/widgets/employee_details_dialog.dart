@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:notification_flutter_app/data/models/employee.dart';
+import 'package:notification_flutter_app/features/task_and_notification/data/models/employee.dart';
 
 void employeeDetailsDialog(Employee employeeDetails, BuildContext context) {
   showDialog(

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:lottie/lottie.dart';
-import 'package:notification_flutter_app/presentation/widgets/add_employee_bottomsheet.dart';
-import 'package:notification_flutter_app/presentation/widgets/employee_details_dialog.dart';
-import 'package:notification_flutter_app/presentation/widgets/loader.dart';
-import 'package:notification_flutter_app/presentation/widgets/custom_search.dart';
-import 'package:notification_flutter_app/presentation/widgets/top_snake_bar.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/add_employee_bottomsheet.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/employee_details_dialog.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/custom_search.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
 import 'package:notification_flutter_app/utils/extention.dart';
 import 'package:provider/provider.dart';
-import 'package:notification_flutter_app/presentation/providers/employee_provider.dart';
-import 'package:notification_flutter_app/presentation/widgets/appbar.dart';
-import 'package:notification_flutter_app/presentation/widgets/employee_add_form.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/employee_provider.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/appbar.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/employee_add_form.dart';
 
 class AdminEmployeeDashboard extends StatefulWidget {
   const AdminEmployeeDashboard({

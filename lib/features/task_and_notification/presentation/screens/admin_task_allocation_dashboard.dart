@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:notification_flutter_app/data/models/employee.dart';
-import 'package:notification_flutter_app/data/models/task.dart';
+import 'package:notification_flutter_app/features/task_and_notification/data/models/employee.dart';
+import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
 import 'package:notification_flutter_app/firebase/fmc_token_manager.dart';
-import 'package:notification_flutter_app/presentation/widgets/loader.dart';
-import 'package:notification_flutter_app/presentation/widgets/top_snake_bar.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:notification_flutter_app/presentation/providers/employee_provider.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/employee_provider.dart';
 
-import 'package:notification_flutter_app/presentation/widgets/appbar.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/appbar.dart';
 
 class AdminTaskAllocationDashboard extends StatefulWidget {
   const AdminTaskAllocationDashboard({

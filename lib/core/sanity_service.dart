@@ -3,10 +3,10 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:notification_flutter_app/data/models/employee.dart';
-import 'package:notification_flutter_app/data/models/secret_key.dart';
-import 'package:notification_flutter_app/data/models/task.dart';
-import 'package:notification_flutter_app/presentation/providers/global_store.dart';
+import 'package:notification_flutter_app/features/task_and_notification/data/models/employee.dart';
+import 'package:notification_flutter_app/features/task_and_notification/data/models/secret_key.dart';
+import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/global_store.dart';
 
 class SanityService {
   String projectId = 'tqenxrzt';

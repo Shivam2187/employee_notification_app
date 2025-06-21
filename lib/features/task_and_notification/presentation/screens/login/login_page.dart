@@ -4,8 +4,8 @@ import 'package:lottie/lottie.dart';
 import 'package:notification_flutter_app/core/hive_service.dart';
 import 'package:notification_flutter_app/core/locator.dart';
 import 'package:notification_flutter_app/firebase/notification.dart';
-import 'package:notification_flutter_app/presentation/providers/global_store.dart';
-import 'package:notification_flutter_app/presentation/widgets/top_snake_bar.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/global_store.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
 import 'package:slider_button/slider_button.dart';
 
 class MyApp extends StatelessWidget {

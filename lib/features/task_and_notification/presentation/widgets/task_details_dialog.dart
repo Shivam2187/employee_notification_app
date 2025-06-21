@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:notification_flutter_app/data/models/task.dart';
-import 'package:notification_flutter_app/presentation/widgets/top_snake_bar.dart';
+import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
 import 'package:notification_flutter_app/utils/extention.dart';
 import 'package:url_launcher/url_launcher.dart';
 

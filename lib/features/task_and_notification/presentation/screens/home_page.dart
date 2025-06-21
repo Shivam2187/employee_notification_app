@@ -6,8 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:notification_flutter_app/core/hive_service.dart';
 import 'package:notification_flutter_app/core/locator.dart';
-import 'package:notification_flutter_app/presentation/providers/employee_provider.dart';
-import 'package:notification_flutter_app/presentation/screens/home_draggable_scrollable_sheet.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/employee_provider.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/home_draggable_scrollable_sheet.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {

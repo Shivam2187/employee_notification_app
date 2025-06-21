@@ -4,8 +4,8 @@ import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:notification_flutter_app/data/models/task.dart';
-import 'package:notification_flutter_app/presentation/providers/global_store.dart';
+import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/global_store.dart';
 import 'package:http/http.dart' as http;
 import 'package:notification_flutter_app/utils/extention.dart';
 
