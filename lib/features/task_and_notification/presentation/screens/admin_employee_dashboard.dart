@@ -81,11 +81,11 @@ class _AdminEmployeeDashboardState extends State<AdminEmployeeDashboard> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(employeeDetails
-                                                .employeeMobileNumber),
+                                                .employeeEmailId),
                                             if (employeeDetails
-                                                    .emailId?.isNotEmpty ??
-                                                false)
-                                              Text(employeeDetails.emailId!),
+                                                .employeeEmailId.isNotEmpty)
+                                              Text(employeeDetails
+                                                  .employeeEmailId),
                                           ],
                                         ),
                                         leading: CircleAvatar(

@@ -72,8 +72,8 @@ class _AdminTaskAllocationDashboardState
                 items: employeProvider.employees
                     .map((e) => DropdownMenuItem(
                           value: e,
-                          child: Text(
-                              '${e.employeeName} - ${e.employeeMobileNumber}'),
+                          child:
+                              Text('${e.employeeName} - ${e.employeeEmailId}'),
                         ))
                     .toList(),
                 onChanged: (value) {
@@ -159,10 +159,10 @@ class _AdminTaskAllocationDashboardState
       final status = await employeProvider.addTask(
         employeeName: selectedEmployee?.employeeName ?? '',
         description: descriptionController.text,
-        emailId: selectedEmployee?.emailId ?? '',
         taskComplitionDate: pickedDate.toString(),
         locationLink: locationLinkController.text,
         mobileNiumber: selectedEmployee?.employeeMobileNumber ?? '',
+        emailId: selectedEmployee?.employeeEmailId ?? '',
       );
       LoaderDialog.hide(context: context);
 
@@ -172,10 +172,10 @@ class _AdminTaskAllocationDashboardState
         final task = Task(
           employeeName: selectedEmployee?.employeeName ?? '',
           description: descriptionController.text,
-          emailId: selectedEmployee?.emailId ?? '',
           taskComplitionDate: pickedDate.toString(),
           locationLink: locationLinkController.text,
           mobileNumber: selectedEmployee?.employeeMobileNumber ?? '',
+          employeeEmailId: selectedEmployee?.employeeEmailId ?? '',
         );
 
         await FCMTokenManager().sendTaskNotification(task: task);

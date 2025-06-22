@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/admin_page.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/admin_task_dashboard.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/home_page.dart';
-import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/login/login_page.dart';
-import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/login/sign_up_page.dart';
+import 'package:notification_flutter_app/features/login/presentation/screens/login_page.dart';
+import 'package:notification_flutter_app/features/login/presentation/screens/sign_up_page.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/task_detail_hero_page.dart';
 
 final routerConfig = GoRouter(

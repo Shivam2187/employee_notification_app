@@ -6,8 +6,9 @@ class Task {
   final String employeeName;
   final String taskComplitionDate;
   final String description;
+  final String? employeeEmailId;
   final String? locationLink;
-  final String? emailId;
+
   final String mobileNumber;
 
   @JsonKey(name: '_id')
@@ -21,7 +22,7 @@ class Task {
     required this.description,
     required this.mobileNumber,
     this.locationLink,
-    this.emailId,
+    this.employeeEmailId,
     this.id,
     this.isTaskCompleted = false,
   });
@@ -32,7 +33,7 @@ class Task {
       employeeName: json['employeeName'] as String,
       taskComplitionDate: json['taskComplitionDate'] as String,
       description: json['description'] as String,
-      emailId: json['emailId'] as String?,
+      employeeEmailId: json['employeeEmailId'] as String?,
       mobileNumber: json['mobileNumber'] as String,
       locationLink: json['locationLink'] as String?,
       isTaskCompleted: json['isTaskCompleted'] as bool? ?? false,
@@ -44,7 +45,7 @@ class Task {
       'employeeName': employeeName,
       'taskComplitionDate': taskComplitionDate,
       'description': description,
-      'emailId': emailId,
+      'emailId': employeeEmailId,
       'locationLink': locationLink,
       'mobileNumber': mobileNumber,
       'isTaskCompleted': isTaskCompleted,

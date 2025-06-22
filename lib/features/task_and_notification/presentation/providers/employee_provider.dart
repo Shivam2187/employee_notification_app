@@ -53,7 +53,8 @@ class EmployeProvider extends ChangeNotifier {
 // Create data (POST request)
   Future<bool> addEmployee({
     required String employeeName,
-    required String employeeMobileNumber,
+    required String employeeEmailId,
+    String? employeeMobileNumber,
     String? emailId,
     String? description,
     String? address,
@@ -61,10 +62,10 @@ class EmployeProvider extends ChangeNotifier {
     try {
       final status = await locator.get<SanityService>().addEmployee(
             employeeName: employeeName,
+            employeeEmailId: employeeEmailId,
             employeeMobileNumber: employeeMobileNumber,
             description: description,
             address: address,
-            emailId: emailId,
           );
       // Optionally, you can fetch the updated list of employees after adding a new one
       if (status) {

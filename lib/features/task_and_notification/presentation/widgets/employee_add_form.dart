@@ -24,7 +24,7 @@ class EmployeeAddFormState extends State<EmployeeAddForm> {
   Future<void> handleSubmit() async {
     if (_formKey.currentState!.validate()) {
       final employeeName = _nameController.text.trim();
-      final employeeMobileNumber = _mobileController.text.trim();
+      final employeeEmailId = _emailController.text.trim();
       final description = _descriptionController.text.trim();
       final address = _addressController.text.trim();
       final emailId = _emailController.text.trim();
@@ -34,7 +34,7 @@ class EmployeeAddFormState extends State<EmployeeAddForm> {
 
       final status = await context.read<EmployeProvider>().addEmployee(
             employeeName: employeeName,
-            employeeMobileNumber: employeeMobileNumber,
+            employeeEmailId: employeeEmailId,
             emailId: emailId,
             description: description,
             address: address,
@@ -56,7 +56,7 @@ class EmployeeAddFormState extends State<EmployeeAddForm> {
   @override
   void dispose() {
     _nameController.dispose();
-    _mobileController.dispose();
+    _emailController.dispose();
     _descriptionController.dispose();
     _addressController.dispose();
     _emailController.dispose();
@@ -79,19 +79,25 @@ class EmployeeAddFormState extends State<EmployeeAddForm> {
           ),
           _buildTextField(
             _mobileController,
+            'Employee Email*',
+            prefixIcon: const Icon(Icons.email),
+            keyboardType: TextInputType.emailAddress,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Email is required!';
+              }
+              if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                return 'Enter valid email address!';
+              }
+              return null;
+            },
+          ),
+          _buildTextField(
+            _mobileController,
             'Employee Mobile Number*',
             prefixIcon: const Icon(Icons.phone),
             keyboardType: TextInputType.phone,
             maxLength: 10,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Mobile number required!';
-              }
-              if (!RegExp(r'^\d{10}$').hasMatch(value)) {
-                return 'Enter valid 10-digit number!';
-              }
-              return null;
-            },
           ),
           _buildTextField(
             _emailController,

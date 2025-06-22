@@ -13,10 +13,15 @@ export const employeeEventType = defineType({
             validation: (rule) => rule.required(),
         },
         {
+            title: 'Employee Email Id',
+            name: 'employeeEmailId',
+            type: 'string',
+            validation: (rule) => rule.required(),
+        },
+        {
             title: 'Employee Mobile Number',
             name: 'employeeMobileNumber',
             type: 'string',
-            validation: (rule) => rule.required(),
         },
 
         {
@@ -30,8 +35,8 @@ export const employeeEventType = defineType({
             type: 'string',
         },
         {
-            title: 'Email Id',
-            name: 'emailId',
+            title: 'Employee Email Id',
+            name: 'employeeEmailId',
             type: 'string',
         },
 
