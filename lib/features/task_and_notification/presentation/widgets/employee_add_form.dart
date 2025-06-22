@@ -27,7 +27,7 @@ class EmployeeAddFormState extends State<EmployeeAddForm> {
       final employeeEmailId = _emailController.text.trim();
       final description = _descriptionController.text.trim();
       final address = _addressController.text.trim();
-      final emailId = _emailController.text.trim();
+      final employeeMobileNumber = _mobileController.text.trim();
 
       if (!mounted) return;
       LoaderDialog.show(context: context);
@@ -35,7 +35,7 @@ class EmployeeAddFormState extends State<EmployeeAddForm> {
       final status = await context.read<EmployeProvider>().addEmployee(
             employeeName: employeeName,
             employeeEmailId: employeeEmailId,
-            emailId: emailId,
+            employeeMobileNumber: employeeMobileNumber,
             description: description,
             address: address,
           );
@@ -94,10 +94,16 @@ class EmployeeAddFormState extends State<EmployeeAddForm> {
           ),
           _buildTextField(
             _mobileController,
-            'Employee Mobile Number',
+            'Employee Mobile Number*',
             prefixIcon: const Icon(Icons.phone),
             keyboardType: TextInputType.phone,
             maxLength: 10,
+            validator: (value) {
+              if (value == null || value.isNotEmpty || value.length != 10) {
+                return 'Mobile number must be 10 digits!';
+              }
+              return null;
+            },
           ),
 
           _buildTextField(

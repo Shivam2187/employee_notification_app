@@ -162,7 +162,7 @@ class _AdminTaskAllocationDashboardState
         taskComplitionDate: pickedDate.toString(),
         locationLink: locationLinkController.text,
         mobileNiumber: selectedEmployee?.employeeMobileNumber ?? '',
-        emailId: selectedEmployee?.employeeEmailId ?? '',
+        employeeEmailId: selectedEmployee?.employeeEmailId ?? '',
       );
       LoaderDialog.hide(context: context);
 
@@ -174,7 +174,7 @@ class _AdminTaskAllocationDashboardState
           description: descriptionController.text,
           taskComplitionDate: pickedDate.toString(),
           locationLink: locationLinkController.text,
-          mobileNumber: selectedEmployee?.employeeMobileNumber ?? '',
+          employeeMobileNumber: selectedEmployee?.employeeMobileNumber ?? '',
           employeeEmailId: selectedEmployee?.employeeEmailId ?? '',
         );
 

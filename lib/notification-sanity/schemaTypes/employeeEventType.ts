@@ -22,6 +22,7 @@ export const employeeEventType = defineType({
             title: 'Employee Mobile Number',
             name: 'employeeMobileNumber',
             type: 'string',
+            validation: (Rule) => Rule.required(),
         },
 
         {

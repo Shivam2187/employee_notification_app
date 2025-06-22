@@ -38,8 +38,8 @@ export const taskEventTypes = defineType({
 
         },
         {
-            name: 'mobileNumber',
-            title: 'mobile Number',
+            name: 'employeeMobileNumber',
+            title: 'Employee Mobile Number',
             type: 'string',
             validation: (Rule) => Rule.required(),
         },

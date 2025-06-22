@@ -1,5 +1,5 @@
 specVersion: "v1beta"
-serviceId: "employee_notification_app"
+serviceId: "employeeEmailId_notification_app"
 location: "us-central1"
 schema:
   source: "./schema"

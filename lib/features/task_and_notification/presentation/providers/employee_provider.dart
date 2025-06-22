@@ -111,7 +111,7 @@ class EmployeProvider extends ChangeNotifier {
   Future<bool> addTask({
     required String employeeName,
     required String taskComplitionDate,
-    required String emailId,
+    required String employeeEmailId,
     required String description,
     required String mobileNiumber,
     String? locationLink,
@@ -120,7 +120,7 @@ class EmployeProvider extends ChangeNotifier {
       final status = await locator.get<SanityService>().addTask(
             employeeName: employeeName,
             taskComplitionDate: taskComplitionDate,
-            emailId: emailId,
+            employeeEmailId: employeeEmailId,
             description: description,
             mobileNumber: mobileNiumber,
             locationLink: locationLink,

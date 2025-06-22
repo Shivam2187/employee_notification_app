@@ -86,10 +86,10 @@ class FCMTokenManager {
   }) async {
     try {
       // 1. Get recipient's FCM token
-      final token = await getTokenForUser(task.mobileNumber ?? '');
+      final token = await getTokenForUser(task.employeeMobileNumber ?? '');
 
       if (token.isNullOrEmpty) {
-        print('No FCM token found for user ${task.mobileNumber}');
+        print('No FCM token found for user ${task.employeeMobileNumber}');
         return;
       }
 
@@ -103,7 +103,7 @@ class FCMTokenManager {
         'data': {
           'type': 'task_assignment',
           'task_id': task.id,
-          'mobile_number': task.mobileNumber,
+          'mobile_number': task.employeeMobileNumber,
         },
         'to': token,
       };
