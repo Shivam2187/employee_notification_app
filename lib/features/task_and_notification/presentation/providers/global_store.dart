@@ -6,7 +6,6 @@ import 'package:notification_flutter_app/core/sanity_service.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/secret_key.dart';
 
 class GlobalStroe {
-  String? userEmail;
   List<SecretKey> _secretKeyList = [];
   bool needToAddNotification = true;
 
@@ -18,7 +17,6 @@ class GlobalStroe {
   }
 
   void init() async {
-    userEmail = '6377052571';
     await fetchSecretValue();
   }
 

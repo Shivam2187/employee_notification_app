@@ -32,8 +32,8 @@ export const taskEventTypes = defineType({
 
         },
         {
-            name: 'emailId',
-            title: 'Email Id',
+            name: 'employeeEmailId',
+            title: 'Employee Email Id',
             type: 'string',
 
         },

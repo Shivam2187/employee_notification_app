@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/employee.dart';
+import 'package:notification_flutter_app/utils/extention.dart';
 
 void employeeDetailsDialog(Employee employeeDetails, BuildContext context) {
   showDialog(
@@ -25,7 +26,8 @@ void employeeDetailsDialog(Employee employeeDetails, BuildContext context) {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _infoRow(Icons.phone, employeeDetails.employeeMobileNumber!),
+          if (employeeDetails.employeeMobileNumber.isNotNullOrEmpty)
+            _infoRow(Icons.phone, employeeDetails.employeeMobileNumber!),
           if (employeeDetails.employeeEmailId.isNotEmpty)
             _infoRow(Icons.email, employeeDetails.employeeEmailId),
           if (employeeDetails.description?.isNotEmpty ?? false)

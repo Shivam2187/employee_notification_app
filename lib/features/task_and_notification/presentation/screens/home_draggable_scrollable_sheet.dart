@@ -8,6 +8,7 @@ import 'package:notification_flutter_app/features/task_and_notification/presenta
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/admin_acess_dialog.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/carousel_slider.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/linkify_widget.dart';
+import 'package:notification_flutter_app/firebase/login_service.dart';
 import 'package:notification_flutter_app/utils/extention.dart';
 import 'package:provider/provider.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/employee_provider.dart';
@@ -31,12 +32,12 @@ class _HomeDraggableScrollableSheetState
   bool _isLoading = true;
   String? _error;
   final globalStore = GlobalStroe();
-  String? userEmail;
+  String? employeeEmailId;
 
   @override
   void initState() {
     super.initState();
-    userEmail = globalStore.userEmail;
+    employeeEmailId = UserAuthService().getCurrentUserEmail();
     _fetchTasks();
   }
 
@@ -72,8 +73,7 @@ class _HomeDraggableScrollableSheetState
       return Consumer<EmployeProvider>(
         builder: (context, provider, _) {
           final filteredTasks = provider.getFilteredAndSortedTask(
-            // userEmail: userEmail ?? '',
-            userEmail: '6377052571',
+            employeeEmailId: employeeEmailId ?? '',
           );
 
           if (filteredTasks.isEmpty) {
@@ -285,61 +285,6 @@ class _HomeDraggableScrollableSheetState
       );
     }
   }
-
-// // add notification  for task
-//   Future<void> setNotificationForRemainingTask() async {
-//     // add notification for remaining task
-//     if (globalStore.needToAddNotification) {
-//       final filteredTasks =
-//           context.read<EmployeProvider>().getFilteredAndSortedTask(
-//                 userMobileNumber: userMobileNumber ?? '',
-//               );
-//       // Cancel all pendingNotification notifications
-//       await LocalNotification.cancelAllNotification();
-
-//       for (var task in filteredTasks) {
-//         final TZDateTime now = TZDateTime.now(local);
-
-//         if (!task.isTaskCompleted) {
-//           final taskDate = DateTime.parse(task.taskComplitionDate);
-
-//           var notificationDate = TZDateTime(
-//               local, taskDate.year, taskDate.month, taskDate.day, 9, 0, 0);
-
-//           // set taskScheduledDate to 9 AM for due task
-//           if (taskDate.isBefore(now)) {
-//             notificationDate =
-//                 TZDateTime(local, now.year, now.month, now.day, 9, 0, 0);
-//             if (notificationDate.isBefore(now)) {
-//               notificationDate = notificationDate.add(const Duration(days: 1));
-//             }
-//           }
-
-//           // Object creation to pass in LocalNotification payload
-//           final taskDetailsWithImageUrl = TaskDetailsWithImageUrl(
-//             task: task,
-//             imageUrl: 'assets/login/rod_stock.jpg',
-//           );
-
-//           final payload = taskDetailsWithImageUrl.toString();
-
-//           // Schedule a local notification
-//           await LocalNotification.scheduleReminderForTask(
-//             id: LocalNotification.notificationId++,
-//             title: task.employeeName,
-//             body: task.description,
-//             payload: payload,
-//             scheduledDate: notificationDate,
-//           );
-//         }
-//       }
-//       globalStore.needToAddNotification = false;
-//     }
-//     // Stting up 8 AM notification every Day
-//     await LocalNotification.scheduleDaily8AMNotification();
-//     // See all pendingNotification notifications
-//     await LocalNotification.pendingNotification();
-//   }
 }
 
 class ArrowDownWidget extends StatelessWidget {

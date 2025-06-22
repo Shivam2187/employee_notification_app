@@ -78,7 +78,7 @@ class EmployeeAddFormState extends State<EmployeeAddForm> {
                 value == null || value.isEmpty ? 'Name is required!' : null,
           ),
           _buildTextField(
-            _mobileController,
+            _emailController,
             'Employee Email*',
             prefixIcon: const Icon(Icons.email),
             keyboardType: TextInputType.emailAddress,
@@ -94,17 +94,12 @@ class EmployeeAddFormState extends State<EmployeeAddForm> {
           ),
           _buildTextField(
             _mobileController,
-            'Employee Mobile Number*',
+            'Employee Mobile Number',
             prefixIcon: const Icon(Icons.phone),
             keyboardType: TextInputType.phone,
             maxLength: 10,
           ),
-          _buildTextField(
-            _emailController,
-            'Email ID',
-            prefixIcon: const Icon(Icons.email),
-            keyboardType: TextInputType.emailAddress,
-          ),
+
           _buildTextField(
             _addressController,
             'Address',

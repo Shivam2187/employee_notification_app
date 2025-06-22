@@ -5,7 +5,6 @@ import 'package:notification_flutter_app/features/login/presentation/widgets/goo
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
 import 'package:notification_flutter_app/firebase/login_service.dart';
 import 'package:notification_flutter_app/firebase/notification.dart';
-import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/global_store.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
 import 'package:slider_button/slider_button.dart';
 
@@ -151,9 +150,6 @@ class _LoginPageState extends State<LoginPage> {
                       if ((_formKey.currentState?.validate() ?? false) &&
                           _emailController.text.trim().isNotEmpty &&
                           _passwordController.text.trim().isNotEmpty) {
-                        //save mobile number to global store
-                        GlobalStroe().userEmail = _emailController.text;
-
                         LoaderDialog.show(context: context);
                         // call login service
                         final status =
@@ -213,8 +209,6 @@ class _LoginPageState extends State<LoginPage> {
                     LoaderDialog.hide(context: context);
 
                     if (userData != null) {
-                      // save user email to global store
-                      GlobalStroe().userEmail = userData.user?.email ?? '';
                       context.go('/');
                     } else {
                       showTopSnackBar(

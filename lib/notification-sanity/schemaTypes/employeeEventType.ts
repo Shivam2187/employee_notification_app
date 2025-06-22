@@ -34,11 +34,5 @@ export const employeeEventType = defineType({
             name: 'address',
             type: 'string',
         },
-        {
-            title: 'Employee Email Id',
-            name: 'employeeEmailId',
-            type: 'string',
-        },
-
     ],
 });

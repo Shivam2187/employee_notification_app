@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
-import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/global_store.dart';
 import 'package:http/http.dart' as http;
 import 'package:notification_flutter_app/utils/extention.dart';
 
@@ -20,23 +19,21 @@ class FCMTokenManager {
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final mobileNumber = GlobalStroe().userEmail;
+  final mobileNumber = '6377052571';
 
   // Initialize FCM and set up token listeners
   Future<void> storeUpdatedToken(String? token) async {
     // Get initial token
-    if (token != null && mobileNumber != null) {
-      await _storeToken(mobileNumber: mobileNumber!, token: token);
+    if (token != null) {
+      await _storeToken(mobileNumber: mobileNumber, token: token);
     } else {
       print('Mobile number or token is null, cannot store token.');
     }
 
     // Listen for token refreshes
-    if (mobileNumber != null) {
-      _firebaseMessaging.onTokenRefresh.listen((newToken) {
-        _storeToken(mobileNumber: mobileNumber!, token: newToken);
-      });
-    }
+    _firebaseMessaging.onTokenRefresh.listen((newToken) {
+      _storeToken(mobileNumber: mobileNumber, token: newToken);
+    });
   }
 
   // Store token in Firestore mapped to mobile number
@@ -89,7 +86,7 @@ class FCMTokenManager {
   }) async {
     try {
       // 1. Get recipient's FCM token
-      final token = await getTokenForUser(task.mobileNumber);
+      final token = await getTokenForUser(task.mobileNumber ?? '');
 
       if (token.isNullOrEmpty) {
         print('No FCM token found for user ${task.mobileNumber}');

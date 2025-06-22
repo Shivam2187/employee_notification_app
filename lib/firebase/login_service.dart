@@ -4,7 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class UserAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? firebaseUser;
+  User? get firebaseUser => _auth.currentUser;
 
   // Singleton pattern
   UserAuthService._privateConstructor();
@@ -12,17 +12,6 @@ class UserAuthService {
       UserAuthService._privateConstructor();
   factory UserAuthService() {
     return _instance;
-  }
-
-  void onInit() {
-    firebaseUser = _auth.currentUser;
-    if (firebaseUser != null) {
-      // User is logged in, you can access user details
-      print('User is logged in: ${firebaseUser!.email}');
-    } else {
-      // User is not logged in
-      print('No user is logged in');
-    }
   }
 
   Future<bool> createUser(String email, String password) async {
@@ -74,5 +63,10 @@ class UserAuthService {
       print('Google Sign-In failed: $e');
       return null;
     }
+  }
+
+  /// get email of the current user
+  String? getCurrentUserEmail() {
+    return firebaseUser?.email;
   }
 }
