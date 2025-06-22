@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:notification_flutter_app/features/login/presentation/widgets/google_sign_in_button.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
 import 'package:notification_flutter_app/firebase/login_service.dart';
 import 'package:notification_flutter_app/firebase/notification.dart';
@@ -155,7 +156,8 @@ class _LoginPageState extends State<LoginPage> {
 
                         LoaderDialog.show(context: context);
                         // call login service
-                        final status = await UserAuthService().login(
+                        final status =
+                            await UserAuthService().loginWithEmailAndPassword(
                           _emailController.text.trim(),
                           _passwordController.text.trim(),
                         );
@@ -193,7 +195,35 @@ class _LoginPageState extends State<LoginPage> {
                     FocusScope.of(context).unfocus();
                     context.push('/signUpScreen');
                   },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.indigo,
+                    textStyle: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
                   child: const Text("Sign Up"),
+                ),
+                GoogleLoginButton(
+                  onPressed: () async {
+                    FocusScope.of(context).unfocus();
+                    LoaderDialog.show(context: context);
+                    final userData = await UserAuthService().signInWithGoogle();
+                    LoaderDialog.hide(context: context);
+
+                    if (userData != null) {
+                      // save user email to global store
+                      GlobalStroe().userEmail = userData.user?.email ?? '';
+                      context.go('/');
+                    } else {
+                      showTopSnackBar(
+                        context: context,
+                        message: "Google Sign In failed. Please try again.",
+                        bgColor: Colors.red,
+                      );
+                    }
+                  },
                 ),
                 Lottie.asset(
                   'assets/animations/dancing.json',

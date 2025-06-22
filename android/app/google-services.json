@@ -12,7 +12,20 @@
           "package_name": "com.example.employee_notification_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "191351733632-s8b70mitbn45e2n6c6nuarhkfha7phmo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.employee_notification_app",
+            "certificate_hash": "8b1da50d9c0d71dd1d29651b8363391aa88b65fa"
+          }
+        },
+        {
+          "client_id": "191351733632-1k53guoook7djker0tv53idjvp4ipdbq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyATCm4YZ2KkyPgV0T9KxfruG2SrvwjDxow"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "191351733632-1k53guoook7djker0tv53idjvp4ipdbq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "191351733632-lmpe90amc12cum5mu6t6c8gg6g2bio1h.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.employeeNotificationApp"
+              }
+            }
+          ]
         }
       }
     }
