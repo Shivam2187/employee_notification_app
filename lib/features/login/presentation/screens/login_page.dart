@@ -39,6 +39,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _obscurePassword = true;
   @override
   void dispose() {
     _emailController.dispose();
@@ -103,14 +104,26 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _passwordController,
-                        obscureText: true,
-                        decoration: const InputDecoration(
+                        obscureText: _obscurePassword,
+                        decoration: InputDecoration(
                           labelText: "Password*",
                           hintText: "Enter your password",
                           fillColor: Colors.white,
                           filled: true,
-                          prefixIcon: Icon(Icons.lock_outline),
-                          border: OutlineInputBorder(
+                          prefixIcon: const Icon(Icons.lock_outline),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
+                          border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(12)),
                           ),
                         ),
@@ -127,7 +140,18 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () {
+                      context.push(
+                        '/forgotPasswordPage',
+                        extra: _emailController.text.trim(),
+                      );
+                    },
+                    child: const Text("Forgot Password?"),
+                  ),
+                ),
                 Center(
                   child: SliderButton(
                     buttonColor: Colors.grey.shade700,

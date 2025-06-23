@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:notification_flutter_app/features/login/presentation/screens/forgot_password_page.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/admin_page.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/admin_task_dashboard.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/home_page.dart';
@@ -43,6 +44,11 @@ final routerConfig = GoRouter(
       name: 'SignUpScreen',
       path: '/signUpScreen',
       builder: (context, state) => const SignUpScreen(),
+    ),
+    GoRoute(
+      name: 'ForgotPasswordPage',
+      path: '/forgotPasswordPage',
+      builder: (context, state) => const ForgotPasswordPage(),
     ),
   ],
 );
