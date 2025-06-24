@@ -72,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                   'assets/animations/welcome.json',
                   repeat: true,
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 16),
                 Form(
                   key: _formKey,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -189,13 +189,15 @@ class _LoginPageState extends State<LoginPage> {
                         // navigate to home page and remove all previous routes
                         if (status) {
                           context.go('/');
-                        } else {
-                          showTopSnackBar(
-                            context: context,
-                            message: "Login failed. Please try again.",
-                            bgColor: Colors.red,
-                          );
                         }
+                        showTopSnackBar(
+                          context: context,
+                          message: status
+                              ? "Login successful!"
+                              : "Login failed. Please try again.",
+                          bgColor: status ? Colors.green : Colors.red,
+                        );
+                        return true;
                       } else {
                         showTopSnackBar(
                           context: context,

@@ -42,12 +42,13 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         ),
         child: Padding(
           padding: const EdgeInsets.all(24.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextFormField(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Form(
+                key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: TextFormField(
                   controller: emailCtrl,
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
@@ -70,50 +71,50 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey.shade700,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onPressed: () async {
-                      bool status = false;
-                      FocusScope.of(context).unfocus();
-                      if ((_formKey.currentState?.validate() ?? false) &&
-                          emailCtrl.text.isNotNullOrEmpty) {
-                        // Call the forgot password service
-                        LoaderDialog.show(context: context);
-                        status = await UserAuthService()
-                            .forgotEmailPassword(emailCtrl.text.trim());
-                        LoaderDialog.hide(context: context);
-
-                        context.pop();
-                      }
-                      showTopSnackBar(
-                        context: context,
-                        message: status
-                            ? "Password reset email sent."
-                            : "Failed to send password reset email.",
-                        bgColor: status ? Colors.green : Colors.red,
-                      );
-                    },
-                    child: const Text(
-                      "Send Reset Link",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey.shade700,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                )
-              ],
-            ),
+                  onPressed: () async {
+                    bool status = false;
+                    FocusScope.of(context).unfocus();
+                    if ((_formKey.currentState?.validate() ?? false) &&
+                        emailCtrl.text.isNotNullOrEmpty) {
+                      // Call the forgot password service
+                      LoaderDialog.show(context: context);
+                      status = await UserAuthService()
+                          .forgotEmailPassword(emailCtrl.text.trim());
+                      LoaderDialog.hide(context: context);
+
+                      context.pop();
+                    }
+                    showTopSnackBar(
+                      context: context,
+                      message: status
+                          ? "Password reset email sent."
+                          : "Failed to send password reset email.",
+                      bgColor: status ? Colors.green : Colors.red,
+                    );
+                  },
+                  child: const Text(
+                    "Send Reset Link",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
         ),
       ),
