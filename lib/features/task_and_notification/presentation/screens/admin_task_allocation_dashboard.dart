@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/employee.dart';
+import 'package:notification_flutter_app/features/task_and_notification/data/models/selected_task_detail_with_url.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
 import 'package:notification_flutter_app/firebase/fmc_token_manager.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
+import 'package:notification_flutter_app/firebase/one_signal_notification.dart';
 import 'package:provider/provider.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/employee_provider.dart';
-
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/appbar.dart';
 
 class AdminTaskAllocationDashboard extends StatefulWidget {
@@ -164,11 +165,9 @@ class _AdminTaskAllocationDashboardState
         mobileNiumber: selectedEmployee?.employeeMobileNumber ?? '',
         employeeEmailId: selectedEmployee?.employeeEmailId ?? '',
       );
-      LoaderDialog.hide(context: context);
 
       if (status) {
-        // Clear the input fields
-
+        /// late task will be parse
         final task = Task(
           employeeName: selectedEmployee?.employeeName ?? '',
           description: descriptionController.text,
@@ -178,8 +177,38 @@ class _AdminTaskAllocationDashboardState
           employeeEmailId: selectedEmployee?.employeeEmailId ?? '',
         );
 
-        await FCMTokenManager().sendTaskNotification(task: task);
+        // await FCMTokenManager().sendTaskNotification(task: task);
 
+        final uid = await FCMTokenManager()
+            .getUid(employeeEmailId: selectedEmployee?.employeeEmailId ?? '');
+
+        /// create a SelectedTaskDetailWithUrl object
+        final selectedTask = SelectedTaskDetailWithUrl(
+          task: task,
+          imageUrl: 'assets/login/rod_stock.jpg',
+          isCompletedButtonVisible: false,
+        );
+
+        /// Send notification to the user now
+        await OneSignalNotification().sendNotificationToUser(
+          uid: uid ?? '',
+          title: "Task Assigned!!!",
+          body: 'You have been assigned a new task.',
+          taskIdDetails: selectedTask.toJson(), // Replace with actual task ID
+        );
+        // Schedule a notification for the due date with a fixed time of 10:00 AM
+        final formattedDate = DateTime(
+            pickedDate!.year, pickedDate!.month, pickedDate!.day, 10, 0);
+
+        await OneSignalNotification().scheduleDueDateNotification(
+          uid: uid ?? '',
+          title: "Task Reminder!!!",
+          body: 'This is a reminder for your assigned task.',
+          taskIdDetails: selectedTask.toJson(),
+          scheduledTime: formattedDate,
+        );
+
+        // Clear the input fields
         descriptionController.clear();
         locationLinkController.clear();
         _controller.clear();
@@ -195,6 +224,7 @@ class _AdminTaskAllocationDashboardState
             status ? 'Task Assigned Successfully!' : 'Failed to assign task!',
         bgColor: status ? Colors.green : Colors.red,
       );
+      LoaderDialog.hide(context: context);
     } else {
       showTopSnackBar(context: context, message: 'Please fill all fields!!');
     }

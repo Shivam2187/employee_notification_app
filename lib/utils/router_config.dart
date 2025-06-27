@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notification_flutter_app/features/login/presentation/screens/forgot_password_page.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/global_store.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/admin_page.dart';
-import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/admin_task_dashboard.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/home_page.dart';
 import 'package:notification_flutter_app/features/login/presentation/screens/login_page.dart';
 import 'package:notification_flutter_app/features/login/presentation/screens/sign_up_page.dart';
@@ -22,11 +23,17 @@ final routerConfig = GoRouter(
       name: 'TaskDetailHeroPage',
       path: '/taskDetailHeroPage',
       builder: (context, state) {
-        final data = state.extra as TaskDetailsWithImageUrl;
+        final data = GlobalStore().selectedTaskDetailWithUrl;
+        if (data == null) {
+          return const Scaffold(
+            body: Center(
+              child: Text('OOPS! Something went wrong'),
+            ),
+          );
+        }
+
         return TaskDetailHeroPage(
-          imageUrl: data.imageUrl,
-          task: data.task,
-          isCompleyedButtonVisible: data.isCompletedButtonVisible,
+          selectedTaskDetailWithUrl: data,
         );
       },
     ),

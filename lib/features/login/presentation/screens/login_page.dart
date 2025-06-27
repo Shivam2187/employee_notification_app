@@ -1,10 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:notification_flutter_app/features/login/presentation/widgets/google_sign_in_button.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
+import 'package:notification_flutter_app/firebase/fmc_token_manager.dart';
 import 'package:notification_flutter_app/firebase/login_service.dart';
-import 'package:notification_flutter_app/firebase/notification.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
 import 'package:slider_button/slider_button.dart';
 
@@ -182,8 +183,13 @@ class _LoginPageState extends State<LoginPage> {
                           _passwordController.text.trim(),
                         );
 
-                        /// fetch FCM token and store  in Firestore database
-                        await NotificationService.fetchFmcToken();
+                        /// Store the FCM token and user UID
+                        await FCMTokenManager().storeUserUid(
+                          employeeEmailId:
+                              FirebaseAuth.instance.currentUser?.email ?? '',
+                          uid: FirebaseAuth.instance.currentUser?.uid ?? '',
+                        );
+
                         if (mounted) LoaderDialog.hide(context: context);
 
                         // navigate to home page and remove all previous routes
@@ -230,8 +236,17 @@ class _LoginPageState extends State<LoginPage> {
                 GoogleLoginButton(
                   onPressed: () async {
                     FocusScope.of(context).unfocus();
+
+                    ///Login with Google
                     LoaderDialog.show(context: context);
                     final userData = await UserAuthService().signInWithGoogle();
+
+                    /// Store user UID that will mapped to the email ID
+                    await FCMTokenManager().storeUserUid(
+                      employeeEmailId:
+                          FirebaseAuth.instance.currentUser?.email ?? '',
+                      uid: FirebaseAuth.instance.currentUser?.uid ?? '',
+                    );
                     LoaderDialog.hide(context: context);
 
                     if (userData != null) {

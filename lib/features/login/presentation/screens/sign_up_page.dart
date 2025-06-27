@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
+import 'package:notification_flutter_app/firebase/fmc_token_manager.dart';
 import 'package:notification_flutter_app/firebase/login_service.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -148,14 +150,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       if ((_formKey.currentState?.validate() ?? false) &&
                           emailCtrl.text.trim().isNotEmpty &&
                           passCtrl.text.trim().isNotEmpty) {
+                        /// Create user with email and password
                         LoaderDialog.show(context: context);
                         final status = await UserAuthService().createUser(
                           emailCtrl.text.trim(),
                           passCtrl.text.trim(),
                         );
+
+                        /// Store user UID that will mapped to the email ID
+                        await FCMTokenManager().storeUserUid(
+                          employeeEmailId:
+                              FirebaseAuth.instance.currentUser?.email ?? '',
+                          uid: FirebaseAuth.instance.currentUser?.uid ?? '',
+                        );
+
                         if (mounted) LoaderDialog.hide(context: context);
                         // navigate to home page and remove all previous routes
-
                         if (status) {
                           context.go('/');
                         } else {

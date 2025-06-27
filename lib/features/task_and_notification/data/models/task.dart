@@ -50,4 +50,19 @@ class Task {
       'isTaskCompleted': isTaskCompleted,
     };
   }
+
+  /// from map
+
+  factory Task.fromMap(Map<String, dynamic> map) {
+    return Task(
+      id: map['_id'] as String?,
+      employeeName: map['employeeName'] as String,
+      taskComplitionDate: map['taskComplitionDate'] as String,
+      description: map['description'] as String,
+      employeeEmailId: map['employeeEmailId'] as String,
+      employeeMobileNumber: map['employeeMobileNumber'] as String?,
+      locationLink: map['locationLink'] as String?,
+      isTaskCompleted: map['isTaskCompleted'] as bool? ?? false,
+    );
+  }
 }

@@ -1,19 +1,22 @@
-import 'dart:convert';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
-import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/employee_provider.dart';
-import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/appbar.dart';
-import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/linkify_widget.dart';
-import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
-import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/custom_search.dart';
-import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
-import 'package:notification_flutter_app/utils/extention.dart';
+import 'package:notification_flutter_app/features/task_and_notification/data/models/selected_task_detail_with_url.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+
+import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/employee_provider.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/global_store.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/appbar.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/custom_search.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/linkify_widget.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
+import 'package:notification_flutter_app/utils/extention.dart';
 
 class AdminTaskDashboard extends StatelessWidget {
   const AdminTaskDashboard({
@@ -146,13 +149,14 @@ class AdminTaskDashboard extends StatelessWidget {
                                     },
                                   ),
                                   onTap: () {
+                                    GlobalStore().selectedTaskDetailWithUrl =
+                                        SelectedTaskDetailWithUrl(
+                                      task: currentTask,
+                                      imageUrl: imageUrl,
+                                      isCompletedButtonVisible: true,
+                                    );
                                     context.push(
                                       '/taskDetailHeroPage',
-                                      extra: TaskDetailsWithImageUrl(
-                                        task: currentTask,
-                                        imageUrl: imageUrl,
-                                        isCompletedButtonVisible: true,
-                                      ),
                                     );
                                   },
                                 ),
@@ -199,40 +203,4 @@ class AdminTaskDashboard extends StatelessWidget {
 
     return remaingDays;
   }
-}
-
-class TaskDetailsWithImageUrl {
-  final Task task;
-  final String imageUrl;
-  final bool isCompletedButtonVisible;
-
-  TaskDetailsWithImageUrl({
-    this.isCompletedButtonVisible = false,
-    required this.task,
-    required this.imageUrl,
-  });
-
-  // Convert object to JSON Map
-  Map<String, dynamic> toJson() => {
-        'task': task.toJson(),
-        'imageUrl': imageUrl,
-        'isCompletedButtonVisible': isCompletedButtonVisible,
-      };
-
-  // Convert object to String
-  @override
-  String toString() => jsonEncode(toJson());
-
-  // Create object from JSON Map
-  factory TaskDetailsWithImageUrl.fromJson(Map<String, dynamic> json) {
-    return TaskDetailsWithImageUrl(
-      task: Task.fromJson(json['task']),
-      imageUrl: json['imageUrl'],
-      isCompletedButtonVisible: json['isCompletedButtonVisible'] ?? false,
-    );
-  }
-
-  // Create object from String
-  factory TaskDetailsWithImageUrl.fromString(String str) =>
-      TaskDetailsWithImageUrl.fromJson(jsonDecode(str));
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
+import 'package:notification_flutter_app/features/task_and_notification/data/models/selected_task_detail_with_url.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/employee_provider.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
@@ -9,15 +9,11 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TaskDetailHeroPage extends StatefulWidget {
-  final String imageUrl;
-  final Task task;
-  final bool isCompleyedButtonVisible;
+  final SelectedTaskDetailWithUrl selectedTaskDetailWithUrl;
 
   const TaskDetailHeroPage({
     super.key,
-    required this.imageUrl,
-    required this.task,
-    this.isCompleyedButtonVisible = false,
+    required this.selectedTaskDetailWithUrl,
   });
 
   @override
@@ -29,8 +25,6 @@ class _TaskDetailHeroPageState extends State<TaskDetailHeroPage> {
 
   @override
   Widget build(BuildContext context) {
-    final EmployeProvider data = context.read<EmployeProvider>();
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
@@ -50,9 +44,9 @@ class _TaskDetailHeroPageState extends State<TaskDetailHeroPage> {
                   bottom: Radius.circular(48),
                 ),
                 child: Hero(
-                  tag: widget.task.id ?? '',
+                  tag: widget.selectedTaskDetailWithUrl.task.id ?? '',
                   child: Image.asset(
-                    widget.imageUrl,
+                    widget.selectedTaskDetailWithUrl.imageUrl,
                     fit: BoxFit.cover,
                     width: double.infinity,
                   ),
@@ -75,23 +69,27 @@ class _TaskDetailHeroPageState extends State<TaskDetailHeroPage> {
                   _detailRow(
                       Icons.report_gmailerrorred, 'Report To:', 'Manager'),
                   const SizedBox(height: 16),
-                  _detailRow(
-                      Icons.person, 'Assigned To:', widget.task.employeeName),
+                  _detailRow(Icons.person, 'Assigned To:',
+                      widget.selectedTaskDetailWithUrl.task.employeeName),
                   const SizedBox(height: 16),
                   _detailRow(Icons.description, 'Description:',
-                      widget.task.description),
+                      widget.selectedTaskDetailWithUrl.task.description),
                   const SizedBox(height: 16),
                   _detailRow(
                     Icons.calendar_today,
                     'Due Date:',
-                    widget.task.taskComplitionDate.toSlashDate(),
+                    widget.selectedTaskDetailWithUrl.task.taskComplitionDate
+                        .toSlashDate(),
                   ),
                   const SizedBox(height: 16),
-                  if (widget.task.locationLink?.isNotEmpty ?? false) ...[
-                    _locationRow(context, widget.task.locationLink!),
+                  if (widget.selectedTaskDetailWithUrl.task.locationLink
+                          ?.isNotEmpty ??
+                      false) ...[
+                    _locationRow(context,
+                        widget.selectedTaskDetailWithUrl.task.locationLink!),
                     const SizedBox(height: 16),
                   ],
-                  if (widget.isCompleyedButtonVisible)
+                  if (widget.selectedTaskDetailWithUrl.isCompletedButtonVisible)
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
@@ -108,13 +106,18 @@ class _TaskDetailHeroPageState extends State<TaskDetailHeroPage> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        onPressed: (widget.task.isTaskCompleted ||
+                        onPressed: (widget.selectedTaskDetailWithUrl.task
+                                    .isTaskCompleted ||
                                 isTaskCompleted)
                             ? null
                             : () async {
                                 LoaderDialog.show(context: context);
-                                final status = await data.updateTaskStatus(
-                                    taskId: widget.task.id ?? '');
+                                final status = await context
+                                    .read<EmployeProvider>()
+                                    .updateTaskStatus(
+                                        taskId: widget.selectedTaskDetailWithUrl
+                                                .task.id ??
+                                            '');
                                 LoaderDialog.hide(context: context);
                                 showTopSnackBar(
                                   context: context,

@@ -74,18 +74,23 @@ class _AdminEmployeeDashboardState extends State<AdminEmployeeDashboard> {
                                     child: Card(
                                       margin: const EdgeInsets.all(8),
                                       child: ListTile(
-                                        title:
-                                            Text(employeeDetails.employeeName),
+                                        title: Text(
+                                          employeeDetails.employeeName,
+                                        ),
                                         subtitle: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(employeeDetails
-                                                .employeeEmailId),
+                                            Text(
+                                              employeeDetails.employeeEmailId,
+                                            ),
                                             if (employeeDetails
-                                                .employeeEmailId.isNotEmpty)
-                                              Text(employeeDetails
-                                                  .employeeEmailId),
+                                                .employeeMobileNumber
+                                                .isNotNullOrEmpty)
+                                              Text(
+                                                employeeDetails
+                                                    .employeeMobileNumber!,
+                                              ),
                                           ],
                                         ),
                                         leading: CircleAvatar(
@@ -100,7 +105,9 @@ class _AdminEmployeeDashboardState extends State<AdminEmployeeDashboard> {
                                                 ),
                                         ),
                                         onTap: () => employeeDetailsDialog(
-                                            employeeDetails, context),
+                                          employeeDetails,
+                                          context,
+                                        ),
                                         trailing: IconButton(
                                           icon: Lottie.asset(
                                               'assets/animations/delete.json',
@@ -108,14 +115,16 @@ class _AdminEmployeeDashboardState extends State<AdminEmployeeDashboard> {
                                               width: 50,
                                               height: 50),
                                           onPressed: () async {
-                                            if (employeeDetails.id == null)
+                                            if (employeeDetails.id == null) {
                                               return;
+                                            }
+
                                             // Calling Delete Task API
                                             LoaderDialog.show(context: context);
                                             final status =
                                                 await data.deleteEmployee(
-                                                    employeeId:
-                                                        employeeDetails.id!);
+                                              employeeId: employeeDetails.id!,
+                                            );
                                             LoaderDialog.hide(context: context);
                                             showTopSnackBar(
                                               context: context,

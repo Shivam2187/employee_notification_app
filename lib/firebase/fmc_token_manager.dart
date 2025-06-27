@@ -2,11 +2,13 @@
 
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
 import 'package:http/http.dart' as http;
 import 'package:notification_flutter_app/utils/extention.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class FCMTokenManager {
   // make singleton
@@ -19,38 +21,38 @@ class FCMTokenManager {
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final mobileNumber = '6377052571';
+  final employeeEmailId = '6377052571';
 
   // Initialize FCM and set up token listeners
   Future<void> storeUpdatedToken(String? token) async {
     // Get initial token
     if (token != null) {
-      await _storeToken(mobileNumber: mobileNumber, token: token);
+      await _storeToken(employeeEmailId: employeeEmailId, token: token);
     } else {
       print('Mobile number or token is null, cannot store token.');
     }
 
     // Listen for token refreshes
     _firebaseMessaging.onTokenRefresh.listen((newToken) {
-      _storeToken(mobileNumber: mobileNumber, token: newToken);
+      _storeToken(employeeEmailId: employeeEmailId, token: newToken);
     });
   }
 
   // Store token in Firestore mapped to mobile number
   Future<void> _storeToken({
-    required String mobileNumber,
+    required String employeeEmailId,
     required String token,
   }) async {
     try {
       final collection = _firestore.collection('user_fcm_token');
 
-      await collection.doc(mobileNumber).set({
+      await collection.doc(employeeEmailId).set({
         'fcm_token': token,
         'last_updated': FieldValue.serverTimestamp(),
-        'mobile_number': mobileNumber,
+        'mobile_number': employeeEmailId,
       }, SetOptions(merge: true));
 
-      print('FCM token stored/updated for $mobileNumber');
+      print('FCM token stored/updated for $employeeEmailId');
     } catch (e) {
       print('Error storing FCM token: $e');
     }
@@ -125,6 +127,40 @@ class FCMTokenManager {
       }
     } catch (e) {
       print('Error sending notification: $e');
+    }
+  }
+
+  /// Create if user is new else update Existing data
+  Future<void> storeUserUid({
+    required String employeeEmailId,
+    required String uid,
+  }) async {
+    try {
+      await OneSignal.login(FirebaseAuth.instance.currentUser?.uid ?? '');
+      final collection = _firestore.collection('user_uid');
+
+      await collection.doc(employeeEmailId).set({
+        'userUid': uid,
+        'lastUpdated': FieldValue.serverTimestamp(),
+        'employeeEmailId': employeeEmailId,
+      }, SetOptions(merge: true));
+
+      print('User UID stored/updated for $employeeEmailId');
+    } catch (e) {
+      print('Error storing User UID: $e');
+    }
+  }
+
+  // Get UID for a specific employee email ID
+  Future<String?> getUid({required String employeeEmailId}) async {
+    try {
+      DocumentSnapshot doc =
+          await _firestore.collection('user_uid').doc(employeeEmailId).get();
+
+      return doc.exists ? doc['userUid'] : null;
+    } catch (e) {
+      print('Error getting UID: $e');
+      return null;
     }
   }
 }

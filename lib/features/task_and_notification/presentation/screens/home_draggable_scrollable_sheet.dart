@@ -2,9 +2,9 @@ import 'package:animated_icon/animated_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:notification_flutter_app/features/task_and_notification/data/models/selected_task_detail_with_url.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/global_store.dart';
-import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/admin_task_dashboard.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/admin_acess_dialog.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/carousel_slider.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/linkify_widget.dart';
@@ -31,7 +31,7 @@ class _HomeDraggableScrollableSheetState
     extends State<HomeDraggableScrollableSheet> {
   bool _isLoading = true;
   String? _error;
-  final globalStore = GlobalStroe();
+  final globalStore = GlobalStore();
   String? employeeEmailId;
 
   @override
@@ -129,19 +129,19 @@ class _HomeDraggableScrollableSheetState
                                 children: [
                                   ListTile(
                                     trailing: AnimateIcon(
+                                      animateIcon: AnimateIcons.eye,
                                       color: Colors.grey.shade800,
+                                      iconType: IconType.continueAnimation,
+                                      width: 24,
                                       onTap: () {
                                         context.push(
                                           '/taskDetailHeroPage',
-                                          extra: TaskDetailsWithImageUrl(
+                                          extra: SelectedTaskDetailWithUrl(
                                             task: currentTask,
                                             imageUrl: imageUrl,
                                           ),
                                         );
                                       },
-                                      iconType: IconType.continueAnimation,
-                                      width: 24,
-                                      animateIcon: AnimateIcons.eye,
                                     ),
                                     contentPadding: const EdgeInsets.all(8),
                                     leading: Hero(
@@ -218,13 +218,12 @@ class _HomeDraggableScrollableSheetState
                                       ],
                                     ),
                                     onTap: () {
-                                      context.push(
-                                        '/taskDetailHeroPage',
-                                        extra: TaskDetailsWithImageUrl(
-                                          task: currentTask,
-                                          imageUrl: imageUrl,
-                                        ),
+                                      GlobalStore().selectedTaskDetailWithUrl =
+                                          SelectedTaskDetailWithUrl(
+                                        task: currentTask,
+                                        imageUrl: imageUrl,
                                       );
+                                      context.push('/taskDetailHeroPage');
                                     },
                                   ),
                                   TaskStatusTag(taskConfig: taskConfig)

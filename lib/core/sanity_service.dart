@@ -12,7 +12,7 @@ class SanityService {
   String projectId = 'tqenxrzt';
   String dataset = 'production';
   String apiVersion = "v2025-05-10";
-  final GlobalStroe globalStore = GlobalStroe();
+  final GlobalStore globalStore = GlobalStore();
 
   // Fetch Secret Key (GET request)
   Future<List<SecretKey>> fetchSecretKey() async {

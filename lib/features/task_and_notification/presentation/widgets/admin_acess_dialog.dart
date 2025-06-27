@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 void showAdminAcessDialog(BuildContext context) async {
   final TextEditingController emailController = TextEditingController();
-  String adminEmail = GlobalStroe().getSecretValue(key: 'adminEmail');
+  String adminEmail = GlobalStore().getSecretValue(key: 'adminEmail');
 
   Future<void> submit() async {
     FocusManager.instance.primaryFocus?.unfocus();

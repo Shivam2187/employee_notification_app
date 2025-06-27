@@ -67,6 +67,7 @@ class EmployeeAddFormState extends State<EmployeeAddForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -99,7 +100,7 @@ class EmployeeAddFormState extends State<EmployeeAddForm> {
             keyboardType: TextInputType.phone,
             maxLength: 10,
             validator: (value) {
-              if (value == null || value.isNotEmpty || value.length != 10) {
+              if (value == null || value.isEmpty || value.length != 10) {
                 return 'Mobile number must be 10 digits!';
               }
               return null;
