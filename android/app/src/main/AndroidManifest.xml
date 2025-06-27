@@ -8,7 +8,7 @@
 
     
     <application
-        android:label="employee_notification_app"
+        android:label="Notify"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

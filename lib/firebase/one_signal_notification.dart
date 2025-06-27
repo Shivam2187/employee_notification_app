@@ -32,6 +32,8 @@ class OneSignalNotification {
       "contents": {"en": body},
       "data": {"taskIdDetails": taskIdDetails}, // Custom data for navigation
       "channel_for_external_user_ids": "push",
+      "small_icon": "https://cdn.sanity.io/images/tqenxrzt/production/b87b6887de335dfbf3c8f3538c22bb69e53dbabd-948x1024.png",
+      "large_icon": "https://cdn.sanity.io/images/tqenxrzt/production/b87b6887de335dfbf3c8f3538c22bb69e53dbabd-948x1024.png",
     };
 
     final response = await http.post(

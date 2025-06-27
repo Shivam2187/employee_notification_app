@@ -44,7 +44,6 @@ class _HomeDraggableScrollableSheetState
   Future<void> _fetchTasks() async {
     try {
       await context.read<EmployeProvider>().fetchAllTask();
-      // setNotificationForRemainingTask();
     } catch (e) {
       setState(() => _error = e.toString());
     } finally {
