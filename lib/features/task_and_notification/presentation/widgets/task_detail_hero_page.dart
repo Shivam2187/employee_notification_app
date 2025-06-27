@@ -93,7 +93,7 @@ class _TaskDetailHeroPageState extends State<TaskDetailHeroPage> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
-                        icon: const Icon(Icons.check_circle_outline),
+                        icon: const Icon(Icons.check_circle_outline, color: Colors.white,),
                         label: const Text('Mark as Completed'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.deepPurple,

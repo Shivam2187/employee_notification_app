@@ -66,22 +66,97 @@ class _AdminTaskAllocationDashboardState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Select Employee*'),
-              DropdownButton<Employee>(
-                value: selectedEmployee,
-                isExpanded: true,
-                hint: const Text('Choose Employee*'),
-                items: employeProvider.employees
-                    .map((e) => DropdownMenuItem(
+              const SizedBox(height: 8),
+              Card(
+                elevation: 2,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.indigo.shade100),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<Employee>(
+                      value: selectedEmployee,
+                      isExpanded: true,
+                      icon: const Icon(Icons.keyboard_arrow_down_rounded,
+                          color: Colors.indigo, size: 28),
+                      hint: const Text(
+                        'Select Employee*',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      style: const TextStyle(
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      items: employeProvider.employees.map((e) {
+                        final initials = e.employeeName.isNotEmpty
+                            ? e.employeeName
+                                .trim()
+                                .split(' ')
+                                .map((w) => w[0])
+                                .take(2)
+                                .join()
+                            : '?';
+                        return DropdownMenuItem<Employee>(
                           value: e,
-                          child:
-                              Text('${e.employeeName} - ${e.employeeEmailId}'),
-                        ))
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedEmployee = value;
-                  });
-                },
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CircleAvatar(
+                                radius: 20,
+                                backgroundColor: Colors.indigo.shade100,
+                                child: Text(
+                                  initials,
+                                  style: const TextStyle(
+                                    color: Colors.indigo,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      e.employeeName,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Expanded(
+                                      child: Text(
+                                        e.employeeEmailId,
+                                        style: TextStyle(
+                                          color: Colors.grey.shade600,
+                                        ),
+                                      ),
+                                    ),
+                                    const Divider()
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedEmployee = value;
+                        });
+                      },
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(height: 16),
               const Text('Last Date of Work*'),
