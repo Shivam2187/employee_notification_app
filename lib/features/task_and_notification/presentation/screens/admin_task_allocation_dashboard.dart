@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/employee.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/selected_task_detail_with_url.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
-import 'package:notification_flutter_app/firebase/fmc_token_manager.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
 import 'package:notification_flutter_app/firebase/one_signal_notification.dart';
+import 'package:notification_flutter_app/firebase/one_signal_uid_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/employee_provider.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/appbar.dart';
@@ -179,7 +179,7 @@ class _AdminTaskAllocationDashboardState
 
         // await FCMTokenManager().sendTaskNotification(task: task);
 
-        final uid = await FCMTokenManager()
+        final uid = await OneSignalUidManager()
             .getUid(employeeEmailId: selectedEmployee?.employeeEmailId ?? '');
 
         /// create a SelectedTaskDetailWithUrl object

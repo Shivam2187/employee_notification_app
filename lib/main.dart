@@ -1,27 +1,23 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:notification_flutter_app/core/debug_print.dart';
-import 'package:notification_flutter_app/features/task_and_notification/data/models/selected_task_detail_with_url.dart';
-import 'package:notification_flutter_app/firebase/notification_service.dart';
-import 'package:notification_flutter_app/features/task_and_notification/data/models/user_login_info.dart';
-import 'package:notification_flutter_app/utils/router_config.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
+
+import 'package:notification_flutter_app/core/debug_print.dart';
 import 'package:notification_flutter_app/core/locator.dart';
+import 'package:notification_flutter_app/features/task_and_notification/data/models/selected_task_detail_with_url.dart';
+import 'package:notification_flutter_app/features/task_and_notification/data/models/user_login_info.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/employee_provider.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/global_store.dart';
+import 'package:notification_flutter_app/utils/router_config.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
-  await NotificationService.initializeNotification();
-  FirebaseMessaging.onBackgroundMessage(
-      NotificationService.firebaseMessagingBackgroundHandler);
 
   /// Hive Initialization
   hiveStorageinit();
@@ -68,6 +64,7 @@ Future<void> hiveStorageinit() async {
 }
 
 Future<void> oneSignalinit() async {
+  /// OneSignal Initialization, set log level, and request permission
   await OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
   OneSignal.initialize("0764d38d-b5dd-455c-9cb4-a24755091fc1");
   await OneSignal.Notifications.requestPermission(true);
@@ -94,7 +91,7 @@ Future<void> oneSignalinit() async {
         "Successfully parsed data. Navigating with task: ${taskObject.toString()}");
 
     GlobalStore().selectedTaskDetailWithUrl = taskObject;
-    if (!isRoutePushed) {
+    if (!isRoutePushed && FirebaseAuth.instance.currentUser != null) {
       isRoutePushed = true;
       routerConfig.push('/taskDetailHeroPage');
     }

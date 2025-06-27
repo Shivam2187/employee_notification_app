@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
-import 'package:notification_flutter_app/firebase/fmc_token_manager.dart';
 import 'package:notification_flutter_app/firebase/login_service.dart';
+import 'package:notification_flutter_app/firebase/one_signal_uid_manager.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({
@@ -158,7 +158,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         );
 
                         /// Store user UID that will mapped to the email ID
-                        await FCMTokenManager().storeUserUid(
+                        await OneSignalUidManager().storeUserUid(
                           employeeEmailId:
                               FirebaseAuth.instance.currentUser?.email ?? '',
                           uid: FirebaseAuth.instance.currentUser?.uid ?? '',

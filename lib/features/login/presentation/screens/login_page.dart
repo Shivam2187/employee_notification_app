@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:notification_flutter_app/features/login/presentation/widgets/google_sign_in_button.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
-import 'package:notification_flutter_app/firebase/fmc_token_manager.dart';
 import 'package:notification_flutter_app/firebase/login_service.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
+import 'package:notification_flutter_app/firebase/one_signal_uid_manager.dart';
 import 'package:slider_button/slider_button.dart';
 
 class MyApp extends StatelessWidget {
@@ -184,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                         );
 
                         /// Store the FCM token and user UID
-                        await FCMTokenManager().storeUserUid(
+                        await OneSignalUidManager().storeUserUid(
                           employeeEmailId:
                               FirebaseAuth.instance.currentUser?.email ?? '',
                           uid: FirebaseAuth.instance.currentUser?.uid ?? '',
@@ -242,7 +242,7 @@ class _LoginPageState extends State<LoginPage> {
                     final userData = await UserAuthService().signInWithGoogle();
 
                     /// Store user UID that will mapped to the email ID
-                    await FCMTokenManager().storeUserUid(
+                    await OneSignalUidManager().storeUserUid(
                       employeeEmailId:
                           FirebaseAuth.instance.currentUser?.email ?? '',
                       uid: FirebaseAuth.instance.currentUser?.uid ?? '',
