@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:notification_flutter_app/core/debug_print.dart';
 import 'package:notification_flutter_app/core/locator.dart';
 import 'package:notification_flutter_app/core/sanity_service.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/employee.dart';
@@ -73,7 +74,7 @@ class EmployeProvider extends ChangeNotifier {
       }
       return status;
     } catch (e) {
-      print('Error creating post: $e');
+      debugprint('Error creating post: $e');
       return false;
     }
   }
@@ -84,7 +85,7 @@ class EmployeProvider extends ChangeNotifier {
       _employees = await locator.get<SanityService>().fetchEmployee();
       notifyListeners();
     } catch (e) {
-      print('Error fetching employees: $e');
+      debugprint('Error fetching employees: $e');
     }
   }
 
@@ -102,7 +103,7 @@ class EmployeProvider extends ChangeNotifier {
 
       return status;
     } catch (e) {
-      print('Error Deleting post: $e');
+      debugprint('Error Deleting post: $e');
       return false;
     }
   }
@@ -131,7 +132,7 @@ class EmployeProvider extends ChangeNotifier {
 
       return status;
     } catch (e) {
-      print('Error creating post: $e');
+      debugprint('Error creating post: $e');
       return false;
     }
   }
@@ -143,7 +144,7 @@ class EmployeProvider extends ChangeNotifier {
       notifyListeners();
       return _taskList;
     } catch (e) {
-      print('Error fetching employees: $e');
+      debugprint('Error fetching employees: $e');
       return [];
     }
   }
@@ -162,7 +163,7 @@ class EmployeProvider extends ChangeNotifier {
 
       return status;
     } catch (e) {
-      print('Error Deleting post: $e');
+      debugprint('Error Deleting post: $e');
       return false;
     }
   }
@@ -197,7 +198,7 @@ class EmployeProvider extends ChangeNotifier {
 
       return status;
     } catch (e) {
-      print('Error while Updating Task Status: $e');
+      debugprint('Error while Updating Task Status: $e');
       return false;
     }
   }

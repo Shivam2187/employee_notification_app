@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:notification_flutter_app/core/debug_print.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
 import 'package:http/http.dart' as http;
 import 'package:notification_flutter_app/utils/extention.dart';
@@ -29,7 +30,7 @@ class FCMTokenManager {
     if (token != null) {
       await _storeToken(employeeEmailId: employeeEmailId, token: token);
     } else {
-      print('Mobile number or token is null, cannot store token.');
+      debugprint('Mobile number or token is null, cannot store token.');
     }
 
     // Listen for token refreshes
@@ -52,9 +53,9 @@ class FCMTokenManager {
         'mobile_number': employeeEmailId,
       }, SetOptions(merge: true));
 
-      print('FCM token stored/updated for $employeeEmailId');
+      debugprint('FCM token stored/updated for $employeeEmailId');
     } catch (e) {
-      print('Error storing FCM token: $e');
+      debugprint('Error storing FCM token: $e');
     }
   }
 
@@ -66,7 +67,7 @@ class FCMTokenManager {
 
       return doc.exists ? doc['fcm_token'] : null;
     } catch (e) {
-      print('Error getting token: $e');
+      debugprint('Error getting token: $e');
       return null;
     }
   }
@@ -78,7 +79,7 @@ class FCMTokenManager {
         'fcm_token': FieldValue.delete(),
       });
     } catch (e) {
-      print('Error removing token: $e');
+      debugprint('Error removing token: $e');
     }
   }
 
@@ -91,7 +92,7 @@ class FCMTokenManager {
       final token = await getTokenForUser(task.employeeMobileNumber ?? '');
 
       if (token.isNullOrEmpty) {
-        print('No FCM token found for user ${task.employeeMobileNumber}');
+        debugprint('No FCM token found for user ${task.employeeMobileNumber}');
         return;
       }
 
@@ -121,12 +122,12 @@ class FCMTokenManager {
       );
 
       if (response.statusCode == 200) {
-        print('Notification sent successfully');
+        debugprint('Notification sent successfully');
       } else {
-        print('Failed to send notification: ${response.body}');
+        debugprint('Failed to send notification: ${response.body}');
       }
     } catch (e) {
-      print('Error sending notification: $e');
+      debugprint('Error sending notification: $e');
     }
   }
 
@@ -145,9 +146,9 @@ class FCMTokenManager {
         'employeeEmailId': employeeEmailId,
       }, SetOptions(merge: true));
 
-      print('User UID stored/updated for $employeeEmailId');
+      debugprint('User UID stored/updated for $employeeEmailId');
     } catch (e) {
-      print('Error storing User UID: $e');
+      debugprint('Error storing User UID: $e');
     }
   }
 
@@ -159,7 +160,7 @@ class FCMTokenManager {
 
       return doc.exists ? doc['userUid'] : null;
     } catch (e) {
-      print('Error getting UID: $e');
+      debugprint('Error getting UID: $e');
       return null;
     }
   }

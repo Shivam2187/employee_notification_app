@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:http/http.dart' as http;
+import 'package:notification_flutter_app/core/debug_print.dart';
 import 'dart:convert';
 
 import 'package:notification_flutter_app/features/task_and_notification/data/models/employee.dart';
@@ -23,7 +24,7 @@ class SanityService {
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body)['result'];
-      print(data);
+      debugprint(data);
       final secretKey = data.map((json) {
         return SecretKey.fromJson(json);
       }).toList();
@@ -88,7 +89,7 @@ class SanityService {
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body)['result'];
-      print(data);
+      debugprint(data);
       final employees = data.map((json) {
         return Employee.fromJson(json);
       }).toList();
@@ -188,7 +189,7 @@ class SanityService {
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body)['result'];
-      print(data);
+      debugprint(data);
       final taskList = data.map((json) {
         return Task.fromJson(json);
       }).toList();

@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:collection/collection.dart';
+import 'package:notification_flutter_app/core/debug_print.dart';
 import 'package:notification_flutter_app/core/locator.dart';
 import 'package:notification_flutter_app/core/sanity_service.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/secret_key.dart';
@@ -26,7 +27,7 @@ class GlobalStore {
     try {
       _secretKeyList = await locator.get<SanityService>().fetchSecretKey();
     } catch (e) {
-      print('Error creating post: $e');
+      debugprint('Error creating post: $e');
     }
   }
 

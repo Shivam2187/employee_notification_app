@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:notification_flutter_app/core/debug_print.dart';
 
 class OneSignalNotification {
   /// Signgleton instance of OneSignalNotification
@@ -43,9 +44,9 @@ class OneSignalNotification {
     );
 
     if (response.statusCode == 200) {
-      print("Notification sent successfully!");
+      debugprint("Notification sent successfully!");
     } else {
-      print("Failed to send notification: ${response.body}");
+      debugprint("Failed to send notification: ${response.body}");
     }
   }
 
@@ -72,7 +73,7 @@ class OneSignalNotification {
       "send_after": formattedScheduledTime, // <-- THE MAGIC PARAMETER
     };
 
-    print("Scheduling notification for: $formattedScheduledTime");
+    debugprint("Scheduling notification for: $formattedScheduledTime");
 
     final response = await http.post(
       Uri.parse('https://onesignal.com/api/v1/notifications'),
@@ -84,10 +85,10 @@ class OneSignalNotification {
     );
 
     if (response.statusCode == 200) {
-      print("Notification successfully scheduled with OneSignal!");
-      print("Response: ${response.body}");
+      debugprint("Notification successfully scheduled with OneSignal!");
+      debugprint("Response: ${response.body}");
     } else {
-      print("Failed to schedule notification: ${response.body}");
+      debugprint("Failed to schedule notification: ${response.body}");
     }
   }
 }

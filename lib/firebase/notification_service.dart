@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:notification_flutter_app/core/debug_print.dart';
 import 'package:notification_flutter_app/firebase/fmc_token_manager.dart';
 
 class NotificationService {
@@ -23,14 +24,14 @@ class NotificationService {
 
     /// Called when message is recieved in the foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print(
+      debugprint(
           '******** Received a message while in the foreground: ${message.messageId}');
       _showFlutterNotication(message);
     });
 
     /// Called when app is brought to foreground from background
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print(
+      debugprint(
           '****** Called when app is brought to foreground from background: ${message.messageId}');
       _showFlutterNotication(message);
     });
@@ -50,7 +51,8 @@ class NotificationService {
     RemoteMessage message,
   ) async {
     await Firebase.initializeApp();
-    print('*********** Handling a background message: ${message.messageId}');
+    debugprint(
+        '*********** Handling a background message: ${message.messageId}');
     if (message.notification == null && message.data.isNotEmpty) {
       _initializeLocalNotification();
       _showFlutterNotication(message);
@@ -64,14 +66,14 @@ class NotificationService {
 
     await FCMTokenManager().storeUpdatedToken(token);
 
-    print('********* FCM Token: $token');
+    debugprint('********* FCM Token: $token');
   }
 
   static void onDidReceiveNotificationResponse(
     NotificationResponse notificationResponse,
   ) {
     // Handle notification on tap
-    print(
+    debugprint(
       '********* Notification tapped with payload: ${notificationResponse.payload}',
     );
     if (notificationResponse.payload != null) {
@@ -138,12 +140,12 @@ class NotificationService {
         await FirebaseMessaging.instance.getInitialMessage();
 
     if (initialMessage != null) {
-      print('A new onMessageOpenedApp event was published!');
+      debugprint('A new onMessageOpenedApp event was published!');
       // _showFlutterNotication(initialMessage);
     }
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
+      debugprint('A new onMessageOpenedApp event was published!');
       //_showFlutterNotication(message);
     });
   }

@@ -1,6 +1,7 @@
 // lib/controllers/auth_controller.dart
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:notification_flutter_app/core/debug_print.dart';
 
 class UserAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -20,7 +21,7 @@ class UserAuthService {
           email: email, password: password);
       return true;
     } catch (e) {
-      print('**** Create User - ${e.toString()}');
+      debugprint('**** Create User - ${e.toString()}');
       return false;
     }
   }
@@ -30,7 +31,7 @@ class UserAuthService {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       return true;
     } catch (e) {
-      print('**** Login - ${e.toString()}');
+      debugprint('**** Login - ${e.toString()}');
       return false;
     }
   }
@@ -40,7 +41,7 @@ class UserAuthService {
       await _auth.signOut();
       return true;
     } catch (e) {
-      print('**** Sign Out - ${e.toString()}');
+      debugprint('**** Sign Out - ${e.toString()}');
       return false;
     }
   }
@@ -60,7 +61,7 @@ class UserAuthService {
 
       return await FirebaseAuth.instance.signInWithCredential(credential);
     } catch (e) {
-      print('****Google Sign-In failed: $e');
+      debugprint('****Google Sign-In failed: $e');
       return null;
     }
   }
@@ -68,7 +69,7 @@ class UserAuthService {
   /// get email of the current user
   String? getCurrentUserEmail() {
     final email = firebaseUser?.email;
-    print('****Current User - $email');
+    debugprint('****Current User - $email');
     return email;
   }
 
@@ -77,7 +78,7 @@ class UserAuthService {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       return true;
     } catch (e) {
-      print('*****Forgot password failed: $e');
+      debugprint('*****Forgot password failed: $e');
       return false;
     }
   }

@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:notification_flutter_app/core/debug_print.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/selected_task_detail_with_url.dart';
 import 'package:notification_flutter_app/firebase/notification_service.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/user_login_info.dart';
@@ -78,7 +79,7 @@ Future<void> oneSignalinit() async {
 
     if (additionalData == null ||
         !additionalData.containsKey('taskIdDetails')) {
-      print(
+      debugprint(
           "Error: Notification clicked, but 'taskIdDetails' was not found in the payload.");
       return;
     }
@@ -89,7 +90,7 @@ Future<void> oneSignalinit() async {
     final SelectedTaskDetailWithUrl taskObject =
         SelectedTaskDetailWithUrl.fromJson(taskDetailsMap);
 
-    print(
+    debugprint(
         "Successfully parsed data. Navigating with task: ${taskObject.toString()}");
 
     GlobalStore().selectedTaskDetailWithUrl = taskObject;
