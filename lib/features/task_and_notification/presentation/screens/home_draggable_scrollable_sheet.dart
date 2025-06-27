@@ -10,6 +10,7 @@ import 'package:notification_flutter_app/features/task_and_notification/presenta
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/linkify_widget.dart';
 import 'package:notification_flutter_app/firebase/login_service.dart';
 import 'package:notification_flutter_app/utils/extention.dart';
+import 'package:notification_flutter_app/firebase/fmc_token_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/employee_provider.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -77,8 +78,22 @@ class _HomeDraggableScrollableSheetState
           );
 
           if (filteredTasks.isEmpty) {
-            return const Center(
-              child: Text('No notifications yet.'),
+            return Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  final task = Task(
+                    employeeEmailId: "test@tester.com",
+                    employeeName: "Test",
+                    description: "Hey, complete your task",
+                    taskComplitionDate: "30-06-2025",
+                    employeeMobileNumber: "6377052571",
+                  );
+
+                  FCMTokenManager().sendTaskNotification(task: task);
+                },
+                child: const Text("Send Notification"),
+              ),
+              // child: Text('No notifications yet.'),
             );
           }
 

@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:googleapis_auth/auth_io.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
 import 'package:http/http.dart' as http;
 import 'package:notification_flutter_app/utils/extention.dart';
@@ -89,33 +90,36 @@ class FCMTokenManager {
     try {
       // 1. Get recipient's FCM token
       final token = await getTokenForUser(task.employeeMobileNumber ?? '');
-
       if (token.isNullOrEmpty) {
         print('No FCM token found for user ${task.employeeMobileNumber}');
         return;
       }
 
+      final secret = {}; // credentials json
+      final creds = ServiceAccountCredentials.fromJson(secret);
+      final client = await clientViaServiceAccount(
+        creds,
+        ['https://www.googleapis.com/auth/cloud-platform'],
+      );
+
       // 2. Prepare notification payload
       final payload = {
-        'notification': {
-          'title': task.employeeName,
-          'body': 'You have a new task: ${task.description}',
-          'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-        },
-        'data': {
-          'type': 'task_assignment',
-          'task_id': task.id,
-          'mobile_number': task.employeeMobileNumber,
-        },
-        'to': token,
+        'message': {
+          'token': token,
+          'notification': {
+            'title': task.employeeName,
+            'body': 'You have a new task: ${task.description}'
+          },
+        }
       };
 
       // 3. Send notification via FCM
-      final response = await http.post(
-        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+      const String senderId = '<sender_id>';
+      final response = await client.post(
+        Uri.parse(
+            'https://fcm.googleapis.com/v1/projects/$senderId/messages:send'),
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'key=YOUR_SERVER_KEY',
+          'content-type': 'application/json',
         },
         body: jsonEncode(payload),
       );
@@ -123,7 +127,8 @@ class FCMTokenManager {
       if (response.statusCode == 200) {
         print('Notification sent successfully');
       } else {
-        print('Failed to send notification: ${response.body}');
+        print(
+            'Failed to send notification: ${response.statusCode} ${response.body}');
       }
     } catch (e) {
       print('Error sending notification: $e');
