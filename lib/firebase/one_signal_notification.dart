@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:notification_flutter_app/core/debug_print.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/global_store.dart';
 
 class OneSignalNotification {
   /// Signgleton instance of OneSignalNotification
@@ -13,9 +14,10 @@ class OneSignalNotification {
     return _instance;
   }
 
-  static String oneSignalAppId = "0764d38d-b5dd-455c-9cb4-a24755091fc1";
+  static String oneSignalAppId =
+      GlobalStore().getSecretValue(key: 'oneSignalAppId');
   static String oneSignalRestApiKey =
-      "os_v2_app_a5snhdnv3vcvzhfuujdvkci7ygyw7e3dz6rus6uu55ipzkaslw6r3giuihrywm4vtcsitexmfhjvzviskpsimztprg2exeyrt5cwk4a";
+      GlobalStore().getSecretValue(key: 'oneSignalRestApiKey');
 
   /// Send a notification to a specific user using OneSignal
   Future<void> sendNotificationToUser({
@@ -74,7 +76,11 @@ class OneSignalNotification {
       "contents": {"en": body},
       "data": {"taskIdDetails": taskIdDetails},
       "channel_for_external_user_ids": "push",
-      "send_after": formattedScheduledTime, // <-- THE MAGIC PARAMETER
+      "send_after": formattedScheduledTime,
+      "small_icon":
+          "https://cdn.sanity.io/images/tqenxrzt/production/b87b6887de335dfbf3c8f3538c22bb69e53dbabd-948x1024.png",
+      "large_icon":
+          "https://cdn.sanity.io/images/tqenxrzt/production/b87b6887de335dfbf3c8f3538c22bb69e53dbabd-948x1024.png",
     };
 
     debugprint("Scheduling notification for: $formattedScheduledTime");

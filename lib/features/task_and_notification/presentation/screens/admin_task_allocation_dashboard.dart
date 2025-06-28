@@ -227,18 +227,18 @@ class _AdminTaskAllocationDashboardState
   void _submitTask(EmployeProvider employeProvider) async {
     if (selectedEmployee != null &&
         pickedDate != null &&
-        descriptionController.text.isNotEmpty) {
+        descriptionController.text.trim().isNotEmpty) {
       FocusManager.instance.primaryFocus?.unfocus();
 
       // Calling the API to assign task
       LoaderDialog.show(context: context);
       final status = await employeProvider.addTask(
-        employeeName: selectedEmployee?.employeeName ?? '',
+        employeeName: selectedEmployee!.employeeName,
         description: descriptionController.text,
         taskComplitionDate: pickedDate.toString(),
         locationLink: locationLinkController.text,
-        mobileNiumber: selectedEmployee?.employeeMobileNumber ?? '',
-        employeeEmailId: selectedEmployee?.employeeEmailId ?? '',
+        employeeMobileNumber: selectedEmployee!.employeeMobileNumber,
+        employeeEmailId: selectedEmployee!.employeeEmailId,
       );
 
       if (status) {
@@ -248,7 +248,7 @@ class _AdminTaskAllocationDashboardState
           description: descriptionController.text,
           taskComplitionDate: pickedDate.toString(),
           locationLink: locationLinkController.text,
-          employeeMobileNumber: selectedEmployee?.employeeMobileNumber ?? '',
+          employeeMobileNumber: selectedEmployee?.employeeMobileNumber ?? 'NA',
           employeeEmailId: selectedEmployee?.employeeEmailId ?? '',
         );
 

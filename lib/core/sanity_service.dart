@@ -140,7 +140,7 @@ class SanityService {
     required String taskComplitionDate,
     required String description,
     required String employeeEmailId,
-    required String mobileNumber,
+    required String employeeMobileNumber,
     String? locationLink,
   }) async {
     final url =
@@ -159,7 +159,7 @@ class SanityService {
             'taskComplitionDate': taskComplitionDate,
             'description': description,
             'employeeEmailId': employeeEmailId,
-            'mobileNumber': mobileNumber,
+            'employeeMobileNumber': employeeMobileNumber,
             'locationLink': locationLink,
           }
         }

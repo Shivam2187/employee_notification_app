@@ -114,7 +114,7 @@ class EmployeProvider extends ChangeNotifier {
     required String taskComplitionDate,
     required String employeeEmailId,
     required String description,
-    required String mobileNiumber,
+    required String employeeMobileNumber,
     String? locationLink,
   }) async {
     try {
@@ -123,7 +123,7 @@ class EmployeProvider extends ChangeNotifier {
             taskComplitionDate: taskComplitionDate,
             employeeEmailId: employeeEmailId,
             description: description,
-            mobileNumber: mobileNiumber,
+            employeeMobileNumber: employeeMobileNumber,
             locationLink: locationLink,
           );
       if (status) {
@@ -163,7 +163,7 @@ class EmployeProvider extends ChangeNotifier {
 
       return status;
     } catch (e) {
-      debugprint('Error Deleting post: $e');
+      debugprint('Error Deleting task: $e');
       return false;
     }
   }

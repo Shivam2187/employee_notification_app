@@ -8,11 +8,9 @@ class Task {
   final String description;
   final String employeeEmailId;
   final String? locationLink;
-  final String? employeeMobileNumber;
-
+  final String employeeMobileNumber;
   @JsonKey(name: '_id')
   final String? id;
-
   final bool isTaskCompleted;
 
   Task({
@@ -20,7 +18,7 @@ class Task {
     required this.taskComplitionDate,
     required this.employeeEmailId,
     required this.description,
-    this.employeeMobileNumber,
+    required this.employeeMobileNumber,
     this.locationLink,
     this.id,
     this.isTaskCompleted = false,
@@ -33,7 +31,7 @@ class Task {
       taskComplitionDate: json['taskComplitionDate'] as String,
       description: json['description'] as String,
       employeeEmailId: json['employeeEmailId'] as String,
-      employeeMobileNumber: json['employeeMobileNumber'] as String?,
+      employeeMobileNumber: json['employeeMobileNumber'] as String,
       locationLink: json['locationLink'] as String?,
       isTaskCompleted: json['isTaskCompleted'] as bool? ?? false,
     );
@@ -60,7 +58,7 @@ class Task {
       taskComplitionDate: map['taskComplitionDate'] as String,
       description: map['description'] as String,
       employeeEmailId: map['employeeEmailId'] as String,
-      employeeMobileNumber: map['employeeMobileNumber'] as String?,
+      employeeMobileNumber: map['employeeMobileNumber'] as String,
       locationLink: map['locationLink'] as String?,
       isTaskCompleted: map['isTaskCompleted'] as bool? ?? false,
     );

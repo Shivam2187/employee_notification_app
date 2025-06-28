@@ -122,7 +122,7 @@ class _HomeDraggableScrollableSheetState
                               ),
                               elevation: 6,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(16),
                               ),
                               child: Stack(
                                 children: [
@@ -326,8 +326,7 @@ class TaskStatusTag extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           decoration: BoxDecoration(
-            borderRadius:
-                const BorderRadius.only(topRight: Radius.circular(12)),
+            borderRadius: const BorderRadius.only(topRight: Radius.circular(8)),
             color: taskConfig.backGroundColor,
           ),
           child: Text(
