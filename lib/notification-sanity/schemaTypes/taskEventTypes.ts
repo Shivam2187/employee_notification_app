@@ -52,6 +52,16 @@ export const taskEventTypes = defineType({
             options: {
                 layout: 'checkbox',
             },
+        },
+        {
+            name: 'isTaskArchived',
+            title: 'Is Task Archived',
+            type: 'boolean',
+            initialValue: false,
+
+            options: {
+                layout: 'checkbox',
+            },
         }
     ],
 })

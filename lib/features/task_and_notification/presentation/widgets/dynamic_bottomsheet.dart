@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-void showAddEmployeeBottomSheet({
+void dynamicBottomsheet({
   required BuildContext context,
   required Widget contentWidget,
   required Widget stickyWidget,

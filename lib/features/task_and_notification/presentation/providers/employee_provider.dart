@@ -21,14 +21,23 @@ class EmployeProvider extends ChangeNotifier {
 
 // This is the search query used to filter the task list
   List<Task> get getFilteredTask => _taskSearchQuery.isEmpty
-      ? _taskList
-      : _taskList.where(
+      ? getNonArchivedTask
+      : getNonArchivedTask.where(
           (task) {
             return task.employeeName
                 .toLowerCase()
                 .contains(_taskSearchQuery.toLowerCase());
           },
         ).toList();
+
+  /// get filtered task which is not archived
+  List<Task> get getNonArchivedTask =>
+      _taskList.where((task) => !task.isTaskArchived).toList();
+
+  /// get   archived Task
+  List<Task> get getArchivedTask {
+    return _taskList.where((task) => task.isTaskArchived).toList();
+  }
 
   void setTaskSearchQuery(String query) {
     _taskSearchQuery = query.trim();
@@ -168,11 +177,38 @@ class EmployeProvider extends ChangeNotifier {
     }
   }
 
+  // Create data (POST request)
+  Future<bool> deleteAllArchievedTask({
+    required List taskList,
+  }) async {
+    for (Task task in taskList) {
+      if (task.id == null || task.id!.isEmpty) {
+        debugprint(
+            'Task ID is null or empty, skipping deletion for this task.');
+        continue;
+      }
+      try {
+        await locator.get<SanityService>().deleteTask(
+              taskId: task.id!,
+            );
+      } catch (e) {
+        fetchAllTask();
+        debugprint('Error Deleting task: $e');
+        return false;
+      }
+    }
+
+    fetchAllTask();
+
+    return true;
+  }
+
   List<Task> getFilteredAndSortedTask({
     required String employeeEmailId,
   }) {
     final filteredTasks = taskList
-        .where((task) => task.employeeEmailId == employeeEmailId)
+        .where((task) =>
+            task.employeeEmailId == employeeEmailId && !task.isTaskArchived)
         .toList();
     filteredTasks.sort((a, b) {
       // Put incomplete tasks first
@@ -190,6 +226,26 @@ class EmployeProvider extends ChangeNotifier {
     try {
       final status = await locator.get<SanityService>().updateTaskStatus(
             taskStatus: true,
+            taskId: taskId,
+          );
+      if (status) {
+        fetchAllTask();
+      }
+
+      return status;
+    } catch (e) {
+      debugprint('Error while Updating Task Status: $e');
+      return false;
+    }
+  }
+
+  // Create data (POST request)
+  Future<bool> updateArchieveStatus({
+    required String taskId,
+  }) async {
+    try {
+      final status = await locator.get<SanityService>().updateArchievedStatus(
+            taskArchievedStatus: true,
             taskId: taskId,
           );
       if (status) {

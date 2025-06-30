@@ -12,6 +12,7 @@ class Task {
   @JsonKey(name: '_id')
   final String? id;
   final bool isTaskCompleted;
+  final bool isTaskArchived;
 
   Task({
     required this.employeeName,
@@ -22,6 +23,7 @@ class Task {
     this.locationLink,
     this.id,
     this.isTaskCompleted = false,
+    this.isTaskArchived = false,
   });
 
   factory Task.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,7 @@ class Task {
       employeeMobileNumber: json['employeeMobileNumber'] as String,
       locationLink: json['locationLink'] as String?,
       isTaskCompleted: json['isTaskCompleted'] as bool? ?? false,
+      isTaskArchived: json['isTaskArchived'] as bool? ?? false,
     );
   }
   Map<String, dynamic> toJson() {
@@ -46,6 +49,7 @@ class Task {
       'locationLink': locationLink,
       'employeeMobileNumber': employeeMobileNumber,
       'isTaskCompleted': isTaskCompleted,
+      'isTaskArchived': isTaskArchived,
     };
   }
 
@@ -61,6 +65,7 @@ class Task {
       employeeMobileNumber: map['employeeMobileNumber'] as String,
       locationLink: map['locationLink'] as String?,
       isTaskCompleted: map['isTaskCompleted'] as bool? ?? false,
+      isTaskArchived: map['isTaskArchived'] as bool? ?? false,
     );
   }
 }

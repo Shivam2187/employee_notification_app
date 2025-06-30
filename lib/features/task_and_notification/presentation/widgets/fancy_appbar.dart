@@ -8,12 +8,16 @@ class FancyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool isNoticationButtoonVisible;
   final bool islogoutButtoonVisible;
+  final bool isArchievedButtonVisible;
+  final void Function()? archievedButtononTap;
 
   const FancyAppBar({
     super.key,
     required this.title,
     this.isNoticationButtoonVisible = false,
     this.islogoutButtoonVisible = false,
+    this.isArchievedButtonVisible = false,
+    this.archievedButtononTap,
   });
 
   @override
@@ -70,6 +74,18 @@ class FancyAppBar extends StatelessWidget implements PreferredSizeWidget {
                   width: 32,
                   animateIcon: AnimateIcons.signOut,
                 ),
+              ),
+            if (isArchievedButtonVisible)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: IconButton(
+                    disabledColor: Colors.grey,
+                    onPressed: archievedButtononTap,
+                    icon: const Icon(
+                      Icons.archive,
+                      color: Colors.white,
+                      size: 32,
+                    )),
               ),
           ],
         ),

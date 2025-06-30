@@ -8,7 +8,7 @@ import 'package:notification_flutter_app/firebase/one_signal_notification.dart';
 import 'package:notification_flutter_app/firebase/one_signal_uid_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/employee_provider.dart';
-import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/appbar.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/fancy_appbar.dart';
 
 class AdminTaskAllocationDashboard extends StatefulWidget {
   const AdminTaskAllocationDashboard({

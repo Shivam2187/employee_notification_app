@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:lottie/lottie.dart';
-import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/add_employee_bottomsheet.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/dynamic_bottomsheet.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/elevetated_button_with_full_width.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/employee_details_dialog.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/custom_search.dart';
@@ -9,7 +10,7 @@ import 'package:notification_flutter_app/features/task_and_notification/presenta
 import 'package:notification_flutter_app/utils/extention.dart';
 import 'package:provider/provider.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/employee_provider.dart';
-import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/appbar.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/fancy_appbar.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/employee_add_form.dart';
 
 class AdminEmployeeDashboard extends StatefulWidget {
@@ -89,7 +90,7 @@ class _AdminEmployeeDashboardState extends State<AdminEmployeeDashboard> {
                                                 .isNotNullOrEmpty)
                                               Text(
                                                 employeeDetails
-                                                    .employeeMobileNumber!,
+                                                    .employeeMobileNumber,
                                               ),
                                           ],
                                         ),
@@ -145,8 +146,8 @@ class _AdminEmployeeDashboardState extends State<AdminEmployeeDashboard> {
                             },
                           ),
                         ),
-                      ),
-                    if (filteredEmployeeList.isEmpty)
+                      )
+                    else
                       Expanded(
                         child: Center(
                           child: Text(
@@ -164,27 +165,16 @@ class _AdminEmployeeDashboardState extends State<AdminEmployeeDashboard> {
             onPressed: () {
               final formKey = GlobalKey<EmployeeAddFormState>();
 
-              showAddEmployeeBottomSheet(
+              dynamicBottomsheet(
                 context: context,
                 contentWidget: EmployeeAddForm(
                   key: formKey,
                 ),
-                stickyWidget: ElevatedButton(
+                stickyWidget: ElevatedButtonWithFullWidth(
                   onPressed: () async {
                     await formKey.currentState?.handleSubmit();
                   },
-                  style: ElevatedButton.styleFrom(
-                    elevation: 16,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    backgroundColor: Colors.deepPurple,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  child: const Text(
-                    'Submit',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  buttonTitle: 'Submit',
                 ),
               );
             },

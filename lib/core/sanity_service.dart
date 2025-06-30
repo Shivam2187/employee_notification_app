@@ -182,7 +182,7 @@ class SanityService {
   // Fetch All Task (GET request)
   Future<List<Task>> fetchAllTask() async {
     const query =
-        '*[_type == "taskEvent"]{ _id, employeeName, taskComplitionDate,description,locationLink, employeeMobileNumber,isTaskCompleted,employeeEmailId}';
+        '*[_type == "taskEvent"]{ _id, employeeName, taskComplitionDate,description,locationLink, employeeMobileNumber,isTaskCompleted,employeeEmailId,isTaskArchived}';
     final encodedQuery = Uri.encodeComponent(query);
     final url =
         'https://$projectId.api.sanity.io/$apiVersion/data/query/$dataset?query=$encodedQuery';
@@ -252,6 +252,44 @@ class SanityService {
             'id': taskId,
             'set': {
               'isTaskCompleted': taskStatus,
+            }
+          }
+        }
+      ]
+    });
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to Update Task Status');
+    }
+  }
+
+  // Update Archieved Status (PATCH request)
+  Future<bool> updateArchievedStatus({
+    required String taskId,
+    required bool taskArchievedStatus,
+  }) async {
+    final url =
+        'https://$projectId.api.sanity.io/$apiVersion/data/mutate/$dataset';
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${globalStore.getSecretValue(key: 'apiKey')}',
+    };
+
+    final body = jsonEncode({
+      'mutations': [
+        {
+          'patch': {
+            'id': taskId,
+            'set': {
+              'isTaskArchived': taskArchievedStatus,
             }
           }
         }
