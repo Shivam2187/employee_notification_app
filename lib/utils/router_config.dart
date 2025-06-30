@@ -9,9 +9,11 @@ import 'package:notification_flutter_app/features/login/presentation/screens/log
 import 'package:notification_flutter_app/features/login/presentation/screens/sign_up_page.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/task_detail_hero_page.dart';
 
+final routerKey = GlobalKey<NavigatorState>();
 final routerConfig = GoRouter(
   initialLocation:
       FirebaseAuth.instance.currentUser == null ? '/loginPage' : '/',
+  navigatorKey: routerKey,
   routes: [
     GoRoute(
       name:

@@ -15,6 +15,7 @@ import 'package:notification_flutter_app/features/task_and_notification/presenta
 import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/global_store.dart';
 import 'package:notification_flutter_app/utils/router_config.dart';
 
+String? _lastHandledNotificationId;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -63,14 +64,21 @@ Future<void> hiveStorageinit() async {
   await Hive.openBox<UserLoginInfo>('mobile_users');
 }
 
-Future<void> oneSignalinit() async {
+Future<void> oneSignalinit(BuildContext context) async {
   /// OneSignal Initialization, set log level, and request permission
   await OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
   OneSignal.initialize("0764d38d-b5dd-455c-9cb4-a24755091fc1");
   await OneSignal.Notifications.requestPermission(true);
-  bool isRoutePushed = false;
 
   OneSignal.Notifications.addClickListener((event) {
+    final notificationId = event.notification.notificationId;
+
+    if (_lastHandledNotificationId == notificationId) {
+      debugprint("Notification $notificationId already handled.");
+      return;
+    }
+    _lastHandledNotificationId = notificationId;
+
     final Map<String, dynamic>? additionalData =
         event.notification.additionalData;
 
@@ -91,20 +99,39 @@ Future<void> oneSignalinit() async {
         "Successfully parsed data. Navigating with task: ${taskObject.toString()}");
 
     GlobalStore().selectedTaskDetailWithUrl = taskObject;
-    if (!isRoutePushed && FirebaseAuth.instance.currentUser != null) {
-      isRoutePushed = true;
-      routerConfig.push('/taskDetailHeroPage');
+    if (FirebaseAuth.instance.currentUser != null) {
+      final currentConfiguration =
+          routerConfig.routerDelegate.currentConfiguration;
+      final currentLocation = currentConfiguration.matches.last.matchedLocation;
+
+      /// Hndling multiple Notification open
+      if (currentLocation == '/taskDetailHeroPage') {
+        routerConfig.replace('/taskDetailHeroPage');
+      } else {
+        routerConfig.push('/taskDetailHeroPage');
+      }
     }
   });
 }
 
-class _HomePage extends StatelessWidget {
+class _HomePage extends StatefulWidget {
   const _HomePage();
 
   @override
-  Widget build(BuildContext context) {
+  State<_HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<_HomePage> {
+  @override
+  void initState() {
+    super.initState();
+
     /// OneSignal Initialization
-    oneSignalinit();
+    oneSignalinit(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
