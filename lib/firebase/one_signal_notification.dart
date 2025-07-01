@@ -53,7 +53,7 @@ class OneSignalNotificationService {
     );
 
     if (response.statusCode == 200) {
-      debugprint("Notification sent successfully!");
+      debugprint("Instant Notification sent successfully!");
     } else {
       debugprint("Failed to send notification: ${response.body}");
     }
@@ -101,7 +101,7 @@ class OneSignalNotificationService {
       final jsonResponse = json.decode(response.body);
       final String notificationId = jsonResponse['id'];
 
-      debugprint("Notification successfully scheduled ${response.body}");
+      debugprint("Scheduled Notification Sent successfully  ${response.body}");
       return notificationId;
     } else {
       debugprint("Failed to schedule notification: ${response.body}");

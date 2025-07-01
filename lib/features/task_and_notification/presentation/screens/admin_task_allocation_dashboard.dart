@@ -255,14 +255,19 @@ class _AdminTaskAllocationDashboardState
       );
 
       // Schedule a notification for the due date with a fixed time of 10:00 AM
-      final formattedDate =
+      DateTime formattedDate =
           DateTime(pickedDate!.year, pickedDate!.month, pickedDate!.day, 10, 0);
+      final isBefore = formattedDate.isBefore(DateTime.now());
+      if (isBefore) {
+        formattedDate = formattedDate.add(const Duration(days: 1));
+      }
 
       final notificationId =
           await OneSignalNotificationService().scheduleDueDateNotification(
         uid: uid ?? '',
-        title: "Task Reminder!!!",
-        body: 'This is a reminder for your assigned task.',
+        title: "⚠️ Task Overdue Today! ⚠️",
+        body:
+            'Your task is overdue Today. Please complete it as soon as possible',
         taskIdDetails: selectedTask.toJson(),
         scheduledTime: formattedDate,
       );
@@ -270,9 +275,10 @@ class _AdminTaskAllocationDashboardState
       /// Send notification to the user now
       await OneSignalNotificationService().sendNotificationToUser(
         uid: uid ?? '',
-        title: "Task Assigned!!!",
-        body: 'You have been assigned a new task.',
-        taskIdDetails: selectedTask.toJson(), // Replace with actual task ID
+        title: '📝 New Task Assigned! 📝',
+        body:
+            'A new task has been assigned to you. Please review and start working on it',
+        taskIdDetails: selectedTask.toJson(),
       );
 
       taskAddedStatus = await employeProvider.addTask(
