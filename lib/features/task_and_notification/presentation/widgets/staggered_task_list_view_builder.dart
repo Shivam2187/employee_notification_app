@@ -10,6 +10,7 @@ import 'package:notification_flutter_app/features/task_and_notification/presenta
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/linkify_widget.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
+import 'package:notification_flutter_app/firebase/one_signal_notification.dart';
 import 'package:notification_flutter_app/utils/extention.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -66,7 +67,6 @@ class StaggeredTaskListViewBuilder extends StatelessWidget {
                       currentTask.employeeName,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
                       ),
                     ),
                     subtitle: Column(
@@ -120,7 +120,14 @@ class StaggeredTaskListViewBuilder extends StatelessWidget {
                         LoaderDialog.show(context: context);
                         if (isTaskDeleteCall) {
                           status = await employeProvider.deleteTask(
-                              taskId: currentTask.id!);
+                            taskId: currentTask.id!,
+                          );
+
+                          /// Cancle notification for Scheduled Notification
+                          await OneSignalNotificationService()
+                              .cancelScheduledNotification(
+                            currentTask.notificationId,
+                          );
                         } else {
                           status = await employeProvider.updateArchieveStatus(
                               taskId: currentTask.id!);

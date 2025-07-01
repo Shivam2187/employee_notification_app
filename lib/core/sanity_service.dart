@@ -141,6 +141,7 @@ class SanityService {
     required String description,
     required String employeeEmailId,
     required String employeeMobileNumber,
+    required String notificationId,
     String? locationLink,
   }) async {
     final url =
@@ -161,6 +162,7 @@ class SanityService {
             'employeeEmailId': employeeEmailId,
             'employeeMobileNumber': employeeMobileNumber,
             'locationLink': locationLink,
+            'notificationId': notificationId,
           }
         }
       ]
@@ -182,7 +184,7 @@ class SanityService {
   // Fetch All Task (GET request)
   Future<List<Task>> fetchAllTask() async {
     const query =
-        '*[_type == "taskEvent"]{ _id, employeeName, taskComplitionDate,description,locationLink, employeeMobileNumber,isTaskCompleted,employeeEmailId,isTaskArchived}';
+        '*[_type == "taskEvent"]{ _id, employeeName, taskComplitionDate,description,locationLink, employeeMobileNumber,isTaskCompleted,employeeEmailId,isTaskArchived,notificationId}';
     final encodedQuery = Uri.encodeComponent(query);
     final url =
         'https://$projectId.api.sanity.io/$apiVersion/data/query/$dataset?query=$encodedQuery';

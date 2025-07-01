@@ -6,6 +6,8 @@ import 'package:notification_flutter_app/core/locator.dart';
 import 'package:notification_flutter_app/core/sanity_service.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/employee.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
+import 'package:notification_flutter_app/firebase/one_signal_notification.dart';
+import 'package:notification_flutter_app/utils/extention.dart';
 
 class EmployeProvider extends ChangeNotifier {
   List<Employee> _employees = [];
@@ -125,16 +127,17 @@ class EmployeProvider extends ChangeNotifier {
     required String description,
     required String employeeMobileNumber,
     String? locationLink,
+    required String notificationId,
   }) async {
     try {
       final status = await locator.get<SanityService>().addTask(
-            employeeName: employeeName,
-            taskComplitionDate: taskComplitionDate,
-            employeeEmailId: employeeEmailId,
-            description: description,
-            employeeMobileNumber: employeeMobileNumber,
-            locationLink: locationLink,
-          );
+          employeeName: employeeName,
+          taskComplitionDate: taskComplitionDate,
+          employeeEmailId: employeeEmailId,
+          description: description,
+          employeeMobileNumber: employeeMobileNumber,
+          locationLink: locationLink,
+          notificationId: notificationId);
       if (status) {
         fetchAllTask();
       }
@@ -183,6 +186,11 @@ class EmployeProvider extends ChangeNotifier {
     final validTasks = taskList
         .where((task) => task.id != null && task.id!.isNotEmpty)
         .toList();
+    final validNotificationId = taskList
+        .where((task) =>
+            task.notificationId != null &&
+            task.notificationId!.isNotNullOrEmpty)
+        .toList();
 
     if (validTasks.isEmpty) {
       debugprint('No valid tasks to delete.');
@@ -191,6 +199,12 @@ class EmployeProvider extends ChangeNotifier {
 
     final results = await Future.wait(
       validTasks.map((task) => deleteTask(taskId: task.id!)),
+    );
+
+    /// Delete scheduled notification
+    Future.wait(
+      validNotificationId.map((task) => OneSignalNotificationService()
+          .cancelScheduledNotification(task.notificationId)),
     );
 
     final allSuccess = results.every((status) => status == true);

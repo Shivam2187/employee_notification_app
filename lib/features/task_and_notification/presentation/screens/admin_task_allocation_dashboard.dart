@@ -228,11 +228,14 @@ class _AdminTaskAllocationDashboardState
     if (selectedEmployee != null &&
         pickedDate != null &&
         descriptionController.text.trim().isNotEmpty) {
+      bool taskAddedStatus = false;
       FocusManager.instance.primaryFocus?.unfocus();
 
       // Calling the API to assign task
       LoaderDialog.show(context: context);
-      final status = await employeProvider.addTask(
+
+      /// late task will be parse
+      final task = Task(
         employeeName: selectedEmployee!.employeeName,
         description: descriptionController.text,
         taskComplitionDate: pickedDate.toString(),
@@ -241,63 +244,64 @@ class _AdminTaskAllocationDashboardState
         employeeEmailId: selectedEmployee!.employeeEmailId,
       );
 
-      if (status) {
-        /// late task will be parse
-        final task = Task(
-          employeeName: selectedEmployee?.employeeName ?? '',
-          description: descriptionController.text,
-          taskComplitionDate: pickedDate.toString(),
-          locationLink: locationLinkController.text,
-          employeeMobileNumber: selectedEmployee?.employeeMobileNumber ?? 'NA',
-          employeeEmailId: selectedEmployee?.employeeEmailId ?? '',
-        );
+      final uid = await OneSignalUidManager()
+          .getUid(employeeEmailId: selectedEmployee!.employeeEmailId);
 
-        // await FCMTokenManager().sendTaskNotification(task: task);
+      /// create a SelectedTaskDetailWithUrl object
+      final selectedTask = SelectedTaskDetailWithUrl(
+        task: task,
+        imageUrl: 'assets/login/rod_stock.jpg',
+        isCompletedButtonVisible: false,
+      );
 
-        final uid = await OneSignalUidManager()
-            .getUid(employeeEmailId: selectedEmployee?.employeeEmailId ?? '');
+      // Schedule a notification for the due date with a fixed time of 10:00 AM
+      final formattedDate =
+          DateTime(pickedDate!.year, pickedDate!.month, pickedDate!.day, 10, 0);
 
-        /// create a SelectedTaskDetailWithUrl object
-        final selectedTask = SelectedTaskDetailWithUrl(
-          task: task,
-          imageUrl: 'assets/login/rod_stock.jpg',
-          isCompletedButtonVisible: false,
-        );
+      final notificationId =
+          await OneSignalNotificationService().scheduleDueDateNotification(
+        uid: uid ?? '',
+        title: "Task Reminder!!!",
+        body: 'This is a reminder for your assigned task.',
+        taskIdDetails: selectedTask.toJson(),
+        scheduledTime: formattedDate,
+      );
 
-        /// Send notification to the user now
-        await OneSignalNotification().sendNotificationToUser(
-          uid: uid ?? '',
-          title: "Task Assigned!!!",
-          body: 'You have been assigned a new task.',
-          taskIdDetails: selectedTask.toJson(), // Replace with actual task ID
-        );
-        // Schedule a notification for the due date with a fixed time of 10:00 AM
-        final formattedDate = DateTime(
-            pickedDate!.year, pickedDate!.month, pickedDate!.day, 10, 0);
+      /// Send notification to the user now
+      await OneSignalNotificationService().sendNotificationToUser(
+        uid: uid ?? '',
+        title: "Task Assigned!!!",
+        body: 'You have been assigned a new task.',
+        taskIdDetails: selectedTask.toJson(), // Replace with actual task ID
+      );
 
-        await OneSignalNotification().scheduleDueDateNotification(
-          uid: uid ?? '',
-          title: "Task Reminder!!!",
-          body: 'This is a reminder for your assigned task.',
-          taskIdDetails: selectedTask.toJson(),
-          scheduledTime: formattedDate,
-        );
+      taskAddedStatus = await employeProvider.addTask(
+        employeeName: selectedEmployee!.employeeName,
+        description: descriptionController.text,
+        taskComplitionDate: pickedDate.toString(),
+        locationLink: locationLinkController.text,
+        employeeMobileNumber: selectedEmployee!.employeeMobileNumber,
+        employeeEmailId: selectedEmployee!.employeeEmailId,
+        notificationId: notificationId ?? '',
+      );
+      // If task was not added successfully, return early
+      if (!taskAddedStatus) return;
 
-        // Clear the input fields
-        descriptionController.clear();
-        locationLinkController.clear();
-        _controller.clear();
-        setState(() {
-          selectedEmployee = null;
-          pickedDate = null;
-        });
-      }
+      // Clear the input fields
+      descriptionController.clear();
+      locationLinkController.clear();
+      _controller.clear();
+      setState(() {
+        selectedEmployee = null;
+        pickedDate = null;
+      });
 
       showTopSnackBar(
         context: context,
-        message:
-            status ? 'Task Assigned Successfully!' : 'Failed to assign task!',
-        bgColor: status ? Colors.green : Colors.red,
+        message: taskAddedStatus
+            ? 'Task Assigned Successfully!'
+            : 'Failed to assign task!',
+        bgColor: taskAddedStatus ? Colors.green : Colors.red,
       );
       LoaderDialog.hide(context: context);
     } else {

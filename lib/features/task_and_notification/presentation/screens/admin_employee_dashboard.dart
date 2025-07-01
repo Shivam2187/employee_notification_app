@@ -78,7 +78,6 @@ class _AdminEmployeeDashboardState extends State<AdminEmployeeDashboard> {
                                         title: Text(
                                           employeeDetails.employeeName,
                                           style: const TextStyle(
-                                            fontSize: 18,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),

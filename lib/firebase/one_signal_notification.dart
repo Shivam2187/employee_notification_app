@@ -4,15 +4,18 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:notification_flutter_app/core/debug_print.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/global_store.dart';
+import 'package:notification_flutter_app/utils/extention.dart';
 
-class OneSignalNotification {
+class OneSignalNotificationService {
   /// Signgleton instance of OneSignalNotification
-  OneSignalNotification._privateConstructor();
-  static final OneSignalNotification _instance =
-      OneSignalNotification._privateConstructor();
-  factory OneSignalNotification() {
+  OneSignalNotificationService._privateConstructor();
+  static final OneSignalNotificationService _instance =
+      OneSignalNotificationService._privateConstructor();
+  factory OneSignalNotificationService() {
     return _instance;
   }
+
+  /// create
 
   static String oneSignalAppId =
       GlobalStore().getSecretValue(key: 'oneSignalAppId');
@@ -57,18 +60,18 @@ class OneSignalNotification {
   }
 
 // This function will schedule a notification to be sent later.
-  Future<void> scheduleDueDateNotification({
+  Future<String?> scheduleDueDateNotification({
     required String uid,
     required String title,
     required String body,
     required DateTime scheduledTime,
     required Map<String, dynamic> taskIdDetails,
   }) async {
-    // 2. Format the time for the OneSignal API (e.g., "yyyy-MM-dd HH:mm:ss 'GMT'Z")
+    //Format the time for the OneSignal API (e.g., "yyyy-MM-dd HH:mm:ss 'GMT'Z")
     final String formattedScheduledTime =
         DateFormat("yyyy-MM-dd HH:mm:ss 'GMT'Z").format(scheduledTime.toUtc());
 
-    // 3. Create the request body, including the new 'send_after' parameter
+    //Create the request body, including the new 'send_after' parameter
     final bodyData = {
       "app_id": oneSignalAppId,
       "include_external_user_ids": [uid],
@@ -95,10 +98,50 @@ class OneSignalNotification {
     );
 
     if (response.statusCode == 200) {
-      debugprint("Notification successfully scheduled with OneSignal!");
-      debugprint("Response: ${response.body}");
+      final jsonResponse = json.decode(response.body);
+      final String notificationId = jsonResponse['id'];
+
+      debugprint("Notification successfully scheduled ${response.body}");
+      return notificationId;
     } else {
       debugprint("Failed to schedule notification: ${response.body}");
+      return null;
+    }
+  }
+
+  /// Cancels a previously scheduled notification using its ID.
+  Future<bool> cancelScheduledNotification(String? notificationId) async {
+    if (notificationId.isNullOrEmpty) {
+      print('⚠️ Notification ID is empty Or Null, cannot cancel.');
+      return false;
+    }
+
+    final url = Uri.parse(
+        'https://onesignal.com/api/v1/notifications/$notificationId?app_id=$oneSignalAppId');
+
+    final headers = {
+      'Authorization': 'Basic $oneSignalRestApiKey',
+    };
+
+    try {
+      final response = await http.delete(
+        url,
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        if (jsonResponse['success'] == true) {
+          print(
+              '✅ OneSignal notification cancelled successfully! ID: $notificationId');
+          return true;
+        }
+      }
+      print('❌ Failed to cancel OneSignal notification: ${response.body}');
+      return false;
+    } catch (e) {
+      print('❌ Error cancelling OneSignal notification: $e');
+      return false;
     }
   }
 }

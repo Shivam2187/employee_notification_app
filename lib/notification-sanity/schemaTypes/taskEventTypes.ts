@@ -62,6 +62,14 @@ export const taskEventTypes = defineType({
             options: {
                 layout: 'checkbox',
             },
+        },
+        {
+            name: 'notificationId',
+            title: 'Notification Id',
+            type: 'string',
+            description: 'Only for Read',
+            readOnly: true
         }
+
     ],
 })
