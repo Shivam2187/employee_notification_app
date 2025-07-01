@@ -21,7 +21,7 @@ class UserAuthService {
           email: email, password: password);
       return true;
     } catch (e) {
-      debugprint('**** Create User - ${e.toString()}');
+      debugprint('Create User - ${e.toString()}');
       return false;
     }
   }
@@ -31,7 +31,7 @@ class UserAuthService {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       return true;
     } catch (e) {
-      debugprint('**** Login - ${e.toString()}');
+      debugprint('Login - ${e.toString()}');
       return false;
     }
   }
@@ -41,7 +41,7 @@ class UserAuthService {
       await _auth.signOut();
       return true;
     } catch (e) {
-      debugprint('**** Sign Out - ${e.toString()}');
+      debugprint('Sign Out - ${e.toString()}');
       return false;
     }
   }
@@ -61,7 +61,7 @@ class UserAuthService {
 
       return await FirebaseAuth.instance.signInWithCredential(credential);
     } catch (e) {
-      debugprint('****Google Sign-In failed: $e');
+      debugprint('Google Sign-In failed: $e');
       return null;
     }
   }
@@ -69,7 +69,7 @@ class UserAuthService {
   /// get email of the current user
   String? getCurrentUserEmail() {
     final email = firebaseUser?.email;
-    debugprint('****Current User - $email');
+    debugprint('Current User - $email');
     return email;
   }
 
@@ -78,7 +78,7 @@ class UserAuthService {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       return true;
     } catch (e) {
-      debugprint('*****Forgot password failed: $e');
+      debugprint('Forgot password failed: $e');
       return false;
     }
   }

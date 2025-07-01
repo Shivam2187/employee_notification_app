@@ -172,35 +172,36 @@ class EmployeProvider extends ChangeNotifier {
 
       return status;
     } catch (e) {
-      debugprint('Error Deleting task: $e');
+      debugprint('Error- Failed to Deleate task: ${e.toString()}');
       return false;
     }
   }
 
-  // Create data (POST request)
   Future<bool> deleteAllArchievedTask({
-    required List taskList,
+    required List<Task> taskList,
   }) async {
-    for (Task task in taskList) {
-      if (task.id == null || task.id!.isEmpty) {
-        debugprint(
-            'Task ID is null or empty, skipping deletion for this task.');
-        continue;
-      }
-      try {
-        await locator.get<SanityService>().deleteTask(
-              taskId: task.id!,
-            );
-      } catch (e) {
-        fetchAllTask();
-        debugprint('Error Deleting task: $e');
-        return false;
-      }
+    final validTasks = taskList
+        .where((task) => task.id != null && task.id!.isNotEmpty)
+        .toList();
+
+    if (validTasks.isEmpty) {
+      debugprint('No valid tasks to delete.');
+      return true;
     }
 
-    fetchAllTask();
+    final results = await Future.wait(
+      validTasks.map((task) => deleteTask(taskId: task.id!)),
+    );
 
-    return true;
+    final allSuccess = results.every((status) => status == true);
+    fetchAllTask();
+    if (allSuccess) {
+      debugprint('${validTasks.length} tasks deleted successfully!');
+      return true;
+    } else {
+      debugprint('Some tasks failed to delete!');
+      return false;
+    }
   }
 
   List<Task> getFilteredAndSortedTask({

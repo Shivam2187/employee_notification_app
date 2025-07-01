@@ -1,10 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/dynamic_bottomsheet.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/elevetated_button_with_full_width.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/staggered_task_list_view_builder.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
 import 'package:provider/provider.dart';
 
 import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
@@ -48,9 +50,17 @@ class AdminTaskDashboard extends StatelessWidget {
                 onPressed: data.getArchivedTask.isNotEmpty
                     ? () async {
                         LoaderDialog.show(context: context);
-                        await data.deleteAllArchievedTask(
+                        final status = await data.deleteAllArchievedTask(
                             taskList: data.getArchivedTask);
+                        showTopSnackBar(
+                          context: context,
+                          message: status
+                              ? 'All Archived Task Deleted Successfully'
+                              : 'Failed to Delete Archived Task',
+                          bgColor: status ? Colors.green : Colors.red,
+                        );
                         LoaderDialog.hide(context: context);
+                        context.pop(); // close the bottom sheet
                       }
                     : null,
               ),
