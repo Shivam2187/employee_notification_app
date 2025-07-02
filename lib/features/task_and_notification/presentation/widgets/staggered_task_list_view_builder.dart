@@ -10,7 +10,7 @@ import 'package:notification_flutter_app/features/task_and_notification/presenta
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/linkify_widget.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
-import 'package:notification_flutter_app/firebase/one_signal_notification.dart';
+import 'package:notification_flutter_app/firebase/one_signal_notification_service.dart';
 import 'package:notification_flutter_app/utils/extention.dart';
 import 'package:shimmer/shimmer.dart';
 

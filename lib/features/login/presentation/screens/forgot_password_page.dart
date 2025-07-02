@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/elevetated_button_with_full_width.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
 import 'package:notification_flutter_app/firebase/login_service.dart';
@@ -73,46 +74,30 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 ),
               ),
               const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey.shade700,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: () async {
-                    bool status = false;
-                    FocusScope.of(context).unfocus();
-                    if ((_formKey.currentState?.validate() ?? false) &&
-                        emailCtrl.text.isNotNullOrEmpty) {
-                      // Call the forgot password service
-                      LoaderDialog.show(context: context);
-                      status = await UserAuthService()
-                          .forgotEmailPassword(emailCtrl.text.trim());
-                      LoaderDialog.hide(context: context);
+              ElevatedButtonWithFullWidth(
+                backgroundColor: Colors.grey.shade700,
+                onPressed: () async {
+                  bool status = false;
+                  FocusScope.of(context).unfocus();
+                  if ((_formKey.currentState?.validate() ?? false) &&
+                      emailCtrl.text.isNotNullOrEmpty) {
+                    // Call the forgot password service
+                    LoaderDialog.show(context: context);
+                    status = await UserAuthService()
+                        .forgotEmailPassword(emailCtrl.text.trim());
+                    LoaderDialog.hide(context: context);
 
-                      context.pop();
-                    }
-                    showTopSnackBar(
-                      context: context,
-                      message: status
-                          ? "Password reset email sent."
-                          : "Failed to send password reset email.",
-                      bgColor: status ? Colors.green : Colors.red,
-                    );
-                  },
-                  child: const Text(
-                    "Send Reset Link",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+                    context.pop();
+                  }
+                  showTopSnackBar(
+                    context: context,
+                    message: status
+                        ? "Password reset email sent."
+                        : "Failed to send password reset email.",
+                    bgColor: status ? Colors.green : Colors.red,
+                  );
+                },
+                buttonTitle: "Send Reset Link",
               )
             ],
           ),

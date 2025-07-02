@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/elevetated_button_with_full_width.dart';
+import 'package:provider/provider.dart';
+
 import 'package:notification_flutter_app/features/task_and_notification/data/models/employee.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/selected_task_detail_with_url.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
-import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
-import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
-import 'package:notification_flutter_app/firebase/one_signal_notification.dart';
-import 'package:notification_flutter_app/firebase/one_signal_uid_manager.dart';
-import 'package:provider/provider.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/employee_provider.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/fancy_appbar.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
+import 'package:notification_flutter_app/firebase/one_signal_notification_service.dart';
+import 'package:notification_flutter_app/firebase/one_signal_uid_manager.dart';
 
 class AdminTaskAllocationDashboard extends StatefulWidget {
+  final Task? editTask;
   const AdminTaskAllocationDashboard({
     super.key,
+    this.editTask,
   });
 
   @override
@@ -22,17 +27,32 @@ class AdminTaskAllocationDashboard extends StatefulWidget {
 
 class _AdminTaskAllocationDashboardState
     extends State<AdminTaskAllocationDashboard> {
-  final List<int> daysOptions = List.generate(100, (index) => index + 1);
   Employee? selectedEmployee;
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController locationLinkController = TextEditingController();
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController datePickerController = TextEditingController();
 
   DateTime? pickedDate;
 
   @override
   void initState() {
     super.initState();
+    preFillData();
+  }
+
+  /// for edit task not for new task
+  void preFillData() {
+    if (widget.editTask == null) return;
+    descriptionController.text = widget.editTask!.description;
+    locationLinkController.text = widget.editTask!.locationLink ?? '';
+    datePickerController.text = widget.editTask!.taskComplitionDate;
+    selectedEmployee = Employee(
+      employeeName: widget.editTask!.employeeName,
+      employeeEmailId: widget.editTask!.employeeEmailId,
+      employeeMobileNumber: widget.editTask!.employeeMobileNumber,
+      description: widget.editTask!.description,
+    );
+    pickedDate = DateTime.parse(widget.editTask!.taskComplitionDate);
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -45,7 +65,7 @@ class _AdminTaskAllocationDashboardState
 
     if (pickedDate != null) {
       setState(() {
-        _controller.text =
+        datePickerController.text =
             "${pickedDate!.day}/${pickedDate!.month}/${pickedDate!.year}";
       });
     }
@@ -80,8 +100,11 @@ class _AdminTaskAllocationDashboardState
                     child: DropdownButton<Employee>(
                       value: selectedEmployee,
                       isExpanded: true,
-                      icon: const Icon(Icons.keyboard_arrow_down_rounded,
-                          color: Colors.indigo, size: 28),
+                      icon: const Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: Colors.indigo,
+                        size: 28,
+                      ),
                       hint: const Text(
                         'Select Employee*',
                         style: TextStyle(
@@ -162,7 +185,7 @@ class _AdminTaskAllocationDashboardState
               const Text('Last Date of Work*'),
               const SizedBox(height: 16),
               TextField(
-                controller: _controller,
+                controller: datePickerController,
                 readOnly: true,
                 onTap: () => _selectDate(context),
                 decoration: InputDecoration(
@@ -195,28 +218,11 @@ class _AdminTaskAllocationDashboardState
                 ),
               ),
               const SizedBox(height: 24),
-              Center(
-                  child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => _submitTask(employeProvider),
-                  style: ElevatedButton.styleFrom(
-                    elevation: 16,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 24,
-                    ),
-                    backgroundColor: Colors.deepPurple,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  child: const Text(
-                    'Assign Task',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              )),
+              ElevatedButtonWithFullWidth(
+                onPressed: () => _submitTask(employeProvider),
+                buttonTitle:
+                    widget.editTask == null ? 'Assign Task' : 'Update Task',
+              ),
             ],
           ),
         ),
@@ -280,23 +286,39 @@ class _AdminTaskAllocationDashboardState
             'A new task has been assigned to you. Please review and start working on it',
         taskIdDetails: selectedTask.toJson(),
       );
-
-      taskAddedStatus = await employeProvider.addTask(
-        employeeName: selectedEmployee!.employeeName,
-        description: descriptionController.text,
-        taskComplitionDate: pickedDate.toString(),
-        locationLink: locationLinkController.text,
-        employeeMobileNumber: selectedEmployee!.employeeMobileNumber,
-        employeeEmailId: selectedEmployee!.employeeEmailId,
-        notificationId: notificationId ?? '',
-      );
+      if (widget.editTask == null) {
+        /// To Add New Task
+        taskAddedStatus = await employeProvider.addTask(
+          employeeName: selectedEmployee!.employeeName,
+          description: descriptionController.text,
+          taskComplitionDate: pickedDate.toString(),
+          locationLink: locationLinkController.text,
+          employeeMobileNumber: selectedEmployee!.employeeMobileNumber,
+          employeeEmailId: selectedEmployee!.employeeEmailId,
+          notificationId: notificationId ?? '',
+        );
+      } else {
+        /// To Update Task
+        taskAddedStatus = await employeProvider.updateTask(
+          taskId: widget.editTask!.id ?? '',
+          employeeName: selectedEmployee!.employeeName,
+          description: descriptionController.text,
+          taskComplitionDate: pickedDate.toString(),
+          locationLink: locationLinkController.text,
+          employeeMobileNumber: selectedEmployee!.employeeMobileNumber,
+          employeeEmailId: selectedEmployee!.employeeEmailId,
+          notificationId: notificationId ?? '',
+        );
+        OneSignalNotificationService()
+            .cancelScheduledNotification(widget.editTask!.notificationId ?? '');
+      }
       // If task was not added successfully, return early
       if (!taskAddedStatus) return;
 
       // Clear the input fields
       descriptionController.clear();
       locationLinkController.clear();
-      _controller.clear();
+      datePickerController.clear();
       setState(() {
         selectedEmployee = null;
         pickedDate = null;
@@ -305,10 +327,15 @@ class _AdminTaskAllocationDashboardState
       showTopSnackBar(
         context: context,
         message: taskAddedStatus
-            ? 'Task Assigned Successfully!'
+            ? widget.editTask == null
+                ? 'Task Assigned Successfully!'
+                : 'Task Updated Successfully!'
             : 'Failed to assign task!',
         bgColor: taskAddedStatus ? Colors.green : Colors.red,
       );
+      if (widget.editTask != null && taskAddedStatus) {
+        context.pop();
+      }
       LoaderDialog.hide(context: context);
     } else {
       showTopSnackBar(context: context, message: 'Please fill all fields!!');

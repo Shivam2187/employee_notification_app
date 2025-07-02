@@ -17,6 +17,13 @@ class Employee {
     this.address,
     this.description,
   });
+  @override
+  bool operator ==(Object other) {
+    return other is Employee && other.employeeEmailId == employeeEmailId;
+  }
+
+  @override
+  int get hashCode => employeeEmailId.hashCode;
   factory Employee.fromJson(Map<String, dynamic> json) {
     return Employee(
       id: json['_id'] as String?,

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/selected_task_detail_with_url.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/providers/employee_provider.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/screens/admin_task_allocation_dashboard.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/elevetated_button_with_full_width.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
 import 'package:notification_flutter_app/utils/extention.dart';
@@ -52,7 +54,6 @@ class _TaskDetailHeroPageState extends State<TaskDetailHeroPage> {
                   ),
                 ),
               ),
-              title: const Text('Task Details'),
               collapseMode: CollapseMode.parallax,
             ),
           ),
@@ -90,53 +91,61 @@ class _TaskDetailHeroPageState extends State<TaskDetailHeroPage> {
                     const SizedBox(height: 16),
                   ],
                   if (widget.selectedTaskDetailWithUrl.isCompletedButtonVisible)
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton.icon(
-                        icon: const Icon(
-                          Icons.check_circle_outline,
-                          color: Colors.white,
-                        ),
-                        label: const Text('Mark as Completed'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.deepPurple,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 12,
+                    ElevatedButtonWithFullWidth(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          PageRouteBuilder(
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    AdminTaskAllocationDashboard(
+                              editTask: widget.selectedTaskDetailWithUrl.task,
+                            ),
+                            transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) {
+                              final tween = Tween(begin: 0.0, end: 1.0);
+                              return FadeTransition(
+                                opacity: animation.drive(tween),
+                                child: child,
+                              );
+                            },
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        onPressed: (widget.selectedTaskDetailWithUrl.task
-                                    .isTaskCompleted ||
-                                isTaskCompleted)
-                            ? null
-                            : () async {
-                                LoaderDialog.show(context: context);
-                                final status = await context
-                                    .read<EmployeProvider>()
-                                    .updateTaskStatus(
-                                        taskId: widget.selectedTaskDetailWithUrl
-                                                .task.id ??
-                                            '');
-                                LoaderDialog.hide(context: context);
-                                showTopSnackBar(
-                                  context: context,
-                                  message: status
-                                      ? 'Task Marked as Completed'
-                                      : 'Failed to update Task status',
-                                  bgColor: status ? Colors.green : Colors.red,
-                                );
+                        );
+                      },
+                      icon: Icons.edit,
+                      buttonTitle: 'Edit Task',
+                    ),
+                  const SizedBox(height: 8),
+                  if (widget.selectedTaskDetailWithUrl.isCompletedButtonVisible)
+                    ElevatedButtonWithFullWidth(
+                      icon: Icons.check_circle_outline,
+                      buttonTitle: 'Mark Task as Completed',
+                      onPressed: (widget.selectedTaskDetailWithUrl.task
+                                  .isTaskCompleted ||
+                              isTaskCompleted)
+                          ? null
+                          : () async {
+                              LoaderDialog.show(context: context);
+                              final status = await context
+                                  .read<EmployeProvider>()
+                                  .updateTaskStatus(
+                                      taskId: widget.selectedTaskDetailWithUrl
+                                              .task.id ??
+                                          '');
+                              LoaderDialog.hide(context: context);
+                              showTopSnackBar(
+                                context: context,
+                                message: status
+                                    ? 'Task Marked as Completed'
+                                    : 'Failed to update Task status',
+                                bgColor: status ? Colors.green : Colors.red,
+                              );
 
-                                setState(() {
-                                  if (status) {
-                                    isTaskCompleted = true;
-                                  }
-                                });
-                              },
-                      ),
+                              setState(() {
+                                if (status) {
+                                  isTaskCompleted = true;
+                                }
+                              });
+                            },
                     ),
                 ],
               ),

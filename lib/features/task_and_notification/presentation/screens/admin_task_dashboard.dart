@@ -51,7 +51,7 @@ class AdminTaskDashboard extends StatelessWidget {
                     ? () async {
                         LoaderDialog.show(context: context);
                         final status = await data.deleteAllArchievedTask(
-                            taskList: data.getArchivedTask);
+                            taskList: data.taskList);
                         showTopSnackBar(
                           context: context,
                           message: status
@@ -84,25 +84,25 @@ class AdminTaskDashboard extends StatelessWidget {
                     employeProvider: data,
                   ),
                 ),
-              // if (filteredTaskList.isEmpty) ...[
-              //   const SizedBox(height: 20),
-              //   Lottie.asset(
-              //     'assets/animations/noData.json',
-              //     repeat: true,
-              //     width: 200,
-              //     height: 200,
-              //   ),
-              //   const SizedBox(height: 20),
-              // ],
-              if (filteredTaskList.isEmpty)
+              if (filteredTaskList.isEmpty && data.getTaskSearchQuery.isEmpty)
+                const Expanded(
+                  child: Center(
+                    child: Text(
+                      'No Task Added Yet!',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ),
+              if (filteredTaskList.isEmpty &&
+                  data.getTaskSearchQuery.isNotEmpty)
                 Expanded(
                   child: Center(
                     child: Text(
-                      'No Task Found with word "${data.getTaskSearchQuery}"',
+                      'No Task Found with word ${data.getTaskSearchQuery}!',
                       style: const TextStyle(fontSize: 20),
                     ),
                   ),
-                )
+                ),
             ],
           ),
         );

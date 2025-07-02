@@ -6,7 +6,7 @@ import 'package:notification_flutter_app/core/locator.dart';
 import 'package:notification_flutter_app/core/sanity_service.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/employee.dart';
 import 'package:notification_flutter_app/features/task_and_notification/data/models/task.dart';
-import 'package:notification_flutter_app/firebase/one_signal_notification.dart';
+import 'package:notification_flutter_app/firebase/one_signal_notification_service.dart';
 import 'package:notification_flutter_app/utils/extention.dart';
 
 class EmployeProvider extends ChangeNotifier {
@@ -234,7 +234,7 @@ class EmployeProvider extends ChangeNotifier {
     return filteredTasks;
   }
 
-  // Create data (POST request)
+  // CTo update task complition status
   Future<bool> updateTaskStatus({
     required String taskId,
   }) async {
@@ -250,6 +250,39 @@ class EmployeProvider extends ChangeNotifier {
       return status;
     } catch (e) {
       debugprint('Error while Updating Task Status: $e');
+      return false;
+    }
+  }
+
+  // Create data (POST request)
+  Future<bool> updateTask({
+    required String taskId,
+    required String employeeName,
+    required String taskComplitionDate,
+    required String description,
+    required String employeeEmailId,
+    required String employeeMobileNumber,
+    required String notificationId,
+    String? locationLink,
+  }) async {
+    try {
+      final status = await locator.get<SanityService>().updateTask(
+            taskId: taskId,
+            employeeMobileNumber: employeeMobileNumber,
+            employeeEmailId: employeeEmailId,
+            employeeName: employeeName,
+            description: description,
+            notificationId: notificationId,
+            taskComplitionDate: taskComplitionDate,
+            locationLink: locationLink,
+          );
+      if (status) {
+        fetchAllTask();
+      }
+
+      return status;
+    } catch (e) {
+      debugprint('Error while Updating Task Details: $e');
       return false;
     }
   }

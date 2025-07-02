@@ -134,6 +134,26 @@ class SanityService {
     }
   }
 
+  // Fetch All Task (GET request)
+  Future<List<Task>> fetchAllTask() async {
+    const query =
+        '*[_type == "taskEvent"]{ _id, employeeName, taskComplitionDate,description,locationLink, employeeMobileNumber,isTaskCompleted,employeeEmailId,isTaskArchived,notificationId}';
+    final encodedQuery = Uri.encodeComponent(query);
+    final url =
+        'https://$projectId.api.sanity.io/$apiVersion/data/query/$dataset?query=$encodedQuery';
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body)['result'];
+      debugprint(data);
+      final taskList = data.map((json) {
+        return Task.fromJson(json);
+      }).toList();
+      return taskList;
+    } else {
+      throw Exception('Failed to fetch posts');
+    }
+  }
+
   // Add Task (POST request)
   Future<bool> addTask({
     required String employeeName,
@@ -181,26 +201,6 @@ class SanityService {
     }
   }
 
-  // Fetch All Task (GET request)
-  Future<List<Task>> fetchAllTask() async {
-    const query =
-        '*[_type == "taskEvent"]{ _id, employeeName, taskComplitionDate,description,locationLink, employeeMobileNumber,isTaskCompleted,employeeEmailId,isTaskArchived,notificationId}';
-    final encodedQuery = Uri.encodeComponent(query);
-    final url =
-        'https://$projectId.api.sanity.io/$apiVersion/data/query/$dataset?query=$encodedQuery';
-    final response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body)['result'];
-      debugprint(data);
-      final taskList = data.map((json) {
-        return Task.fromJson(json);
-      }).toList();
-      return taskList;
-    } else {
-      throw Exception('Failed to fetch posts');
-    }
-  }
-
   //Delete Task (DELETE request)
   Future<bool> deleteTask({
     required String taskId,
@@ -232,6 +232,56 @@ class SanityService {
       return true;
     } else {
       throw Exception('Failed to delete task');
+    }
+  }
+
+  // Update Task (PATCH request)
+  Future<bool> updateTask({
+    required String taskId,
+    required String employeeName,
+    required String taskComplitionDate,
+    required String description,
+    required String employeeEmailId,
+    required String employeeMobileNumber,
+    required String notificationId,
+    String? locationLink,
+  }) async {
+    final url =
+        'https://$projectId.api.sanity.io/$apiVersion/data/mutate/$dataset';
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${globalStore.getSecretValue(key: 'apiKey')}',
+    };
+
+    final body = jsonEncode({
+      'mutations': [
+        {
+          'patch': {
+            'id': taskId,
+            'set': {
+              'employeeName': employeeName,
+              'taskComplitionDate': taskComplitionDate,
+              'description': description,
+              'employeeEmailId': employeeEmailId,
+              'employeeMobileNumber': employeeMobileNumber,
+              'locationLink': locationLink,
+              'notificationId': notificationId,
+            }
+          }
+        }
+      ]
+    });
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to Update Task Details');
     }
   }
 

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/elevetated_button_with_full_width.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/loader.dart';
 import 'package:notification_flutter_app/features/task_and_notification/presentation/widgets/top_snake_bar.dart';
 import 'package:notification_flutter_app/firebase/login_service.dart';
@@ -135,63 +136,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey.shade700,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onPressed: () async {
-                      FocusScope.of(context).unfocus();
-                      if ((_formKey.currentState?.validate() ?? false) &&
-                          emailCtrl.text.trim().isNotEmpty &&
-                          passCtrl.text.trim().isNotEmpty) {
-                        /// Create user with email and password
-                        LoaderDialog.show(context: context);
-                        final status = await UserAuthService().createUser(
-                          emailCtrl.text.trim(),
-                          passCtrl.text.trim(),
-                        );
+                ElevatedButtonWithFullWidth(
+                  backgroundColor: Colors.grey.shade700,
+                  onPressed: () async {
+                    FocusScope.of(context).unfocus();
+                    if ((_formKey.currentState?.validate() ?? false) &&
+                        emailCtrl.text.trim().isNotEmpty &&
+                        passCtrl.text.trim().isNotEmpty) {
+                      /// Create user with email and password
+                      LoaderDialog.show(context: context);
+                      final status = await UserAuthService().createUser(
+                        emailCtrl.text.trim(),
+                        passCtrl.text.trim(),
+                      );
 
-                        /// Store user UID that will mapped to the email ID
-                        await OneSignalUidManager().storeUserUid(
-                          employeeEmailId:
-                              FirebaseAuth.instance.currentUser?.email ?? '',
-                          uid: FirebaseAuth.instance.currentUser?.uid ?? '',
-                        );
+                      /// Store user UID that will mapped to the email ID
+                      await OneSignalUidManager().storeUserUid(
+                        employeeEmailId:
+                            FirebaseAuth.instance.currentUser?.email ?? '',
+                        uid: FirebaseAuth.instance.currentUser?.uid ?? '',
+                      );
 
-                        if (mounted) LoaderDialog.hide(context: context);
-                        // navigate to home page and remove all previous routes
-                        if (status) {
-                          context.go('/');
-                        } else {
-                          showTopSnackBar(
-                            context: context,
-                            message: "Sign Up failed. Please try again.",
-                            bgColor: Colors.red,
-                          );
-                        }
+                      if (mounted) LoaderDialog.hide(context: context);
+                      // navigate to home page and remove all previous routes
+                      if (status) {
+                        context.go('/');
                       } else {
                         showTopSnackBar(
                           context: context,
-                          message: "Please fill in all fields correctly.",
+                          message: "Sign Up failed. Please try again.",
                           bgColor: Colors.red,
                         );
                       }
-                    },
-                    child: const Text(
-                      "Sign Up",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                    } else {
+                      showTopSnackBar(
+                        context: context,
+                        message: "Please fill in all fields correctly.",
+                        bgColor: Colors.red,
+                      );
+                    }
+                  },
+                  buttonTitle: "Sign Up",
                 ),
                 const SizedBox(height: 16),
                 const Text("Already have an account?"),
